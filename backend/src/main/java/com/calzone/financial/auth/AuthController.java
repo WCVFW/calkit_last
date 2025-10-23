@@ -1,7 +1,7 @@
 package com.calzone.financial.auth;
 
-import com.calzone.financial.auth.dto.RegisterRequest; // 1. Must import the DTO
-import jakarta.validation.Valid; // 2. Must import @Valid
+import com.calzone.financial.auth.dto.RegisterRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*") // Added CrossOrigin for frontend communication
+@CrossOrigin(origins = "*") 
 public class AuthController {
 
     private final AuthService authService;
@@ -20,15 +20,15 @@ public class AuthController {
     }
 
     /**
-     * FIXES: 
-     * 1. Uses the RegisterRequest DTO instead of a raw Map.
-     * 2. Adds @Valid for input validation (fullName, email, phone, password).
-     * 3. Catches IllegalArgumentException (e.g., "Email exists") and returns 409 Conflict.
+     * Handles /api/auth/signup endpoint.
+     * 1. Uses @Valid to automatically check constraints defined in RegisterRequest DTO.
+     * 2. Calls the AuthService with all four required fields.
+     * 3. Maps IllegalArgumentException (Email exists) to 409 Conflict.
      */
-    @PostMapping("/signup") // Using /signup for common convention
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    @PostMapping("/signup") 
+    public ResponseEntity<?> signup(@Valid @RequestBody RegisterRequest request) {
         try {
-            // Call the service with the full set of user details
+            // Call the service with all four required user details (fullName, email, phone, password)
             Map<String, Object> res = authService.register(
                 request.email(), 
                 request.password(), 
@@ -36,11 +36,11 @@ public class AuthController {
                 request.phone()
             );
             
-            // Assuming the service handles OTP and returns the necessary data
-            return ResponseEntity.status(HttpStatus.CREATED).body(res); // Use 201 CREATED for new resource
+            // Use 201 CREATED for successful resource creation
+            return ResponseEntity.status(HttpStatus.CREATED).body(res); 
 
         } catch (IllegalArgumentException e) {
-            // Map domain-specific error (like "Email exists") to 409 Conflict
+            // Return 409 Conflict if the email already exists
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 Map.of("message", e.getMessage())
             );
@@ -51,7 +51,6 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         String password = body.get("password");
-        // NOTE: login method should also be updated in AuthService to use the PasswordEncoder bean if possible.
         Map<String,Object> res = authService.login(email, password);
         return ResponseEntity.ok(res);
     }
