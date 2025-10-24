@@ -1,92 +1,114 @@
-import React, { useEffect, useState } from "react";
-import { adminAPI } from "@/lib/api";
+import React, { useState, useEffect } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import { HiOutlineUser } from "react-icons/hi";
+import AdminEmployees from "./AdminEmployees";
+import MyAccount from "../MyAccount";
+import { getUser } from "../../lib/auth"; // fetch current user from localStorage or API
 
-export default function AdminEmployees() {
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ fullName: "", email: "", phone: "", password: "" });
-  const [message, setMessage] = useState(null);
+const adminNavItems = [
+  { to: "/dashboard/admin", label: "Home", end: true },
+  { to: "/dashboard/admin/employees", label: "Employees" },
+  { to: "/dashboard/admin/crm", label: "CRM" },
+  { to: "/dashboard/admin/reports", label: "Reports" },
+  { to: "/dashboard/admin/workflow-analytics", label: "Analytics" },
+  { to: "/dashboard/admin/orders", label: "Orders" },
+];
 
-  const fetch = async () => {
-    setLoading(true);
-    try {
-      const res = await adminAPI.listEmployees();
-      setEmployees(res.data || []);
-    } catch (e) {
-      setMessage("Failed to load employees");
-    } finally { setLoading(false); }
-  };
+export default function AdminDashboard() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    const u = getUser();
+    setUser(u);
+  }, []);
 
-  const create = async (e) => {
-    e.preventDefault();
-    setMessage(null);
-    try {
-      await adminAPI.createEmployee(form);
-      setForm({ fullName: "", email: "", phone: "", password: "" });
-      fetch();
-      setMessage("Employee created");
-    } catch (e) {
-      setMessage(e?.response?.data?.message || "Create failed");
-    }
-  };
-
-  const remove = async (id) => {
-    if (!confirm("Delete employee?")) return;
-    try {
-      await adminAPI.deleteEmployee(id);
-      fetch();
-    } catch (e) {
-      setMessage("Delete failed");
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth:update"));
+    window.location.href = "/login";
   };
 
   return (
-    <div className="min-h-screen p-4 space-y-6 md:p-8 bg-gray-50">
-      <div className="p-6 bg-white shadow-lg rounded-xl md:p-8">
-        <h1 className="text-2xl font-semibold">Admin — Employees</h1>
-        <p className="mt-1 text-slate-600">Manage employees (requires admin token).</p>
-
-        <form className="grid grid-cols-1 gap-3 mt-4 sm:grid-cols-2" onSubmit={create}>
-          <input placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form, fullName:e.target.value})} className="p-2 border" />
-          <input placeholder="Email" value={form.email} onChange={e=>setForm({...form, email:e.target.value})} className="p-2 border" />
-          <input placeholder="Phone" value={form.phone} onChange={e=>setForm({...form, phone:e.target.value})} className="p-2 border" />
-          <input placeholder="Password" value={form.password} onChange={e=>setForm({...form, password:e.target.value})} className="p-2 border" />
-          <div className="sm:col-span-2">
-            <button className="px-4 py-2 text-white bg-blue-600 rounded">Create employee</button>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="flex flex-col md:flex-row items-center justify-between px-6 py-4 max-w-[1440px] mx-auto">
+          {/* Logo */}
+          <div className="text-2xl font-extrabold text-[#0080FF]">
+            A<span className="text-gray-700">DMIN</span>
           </div>
-        </form>
 
-        {message && <div className="mt-4 text-sm text-red-600">{message}</div>}
+          {/* Desktop Nav */}
+          <nav className="hidden gap-3 mt-3 md:flex md:mt-0">
+            {adminNavItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `px-3 py-1.5 text-sm rounded-md transition ${
+                    isActive
+                      ? "bg-[#E6F3FF] text-[#0080FF] font-semibold"
+                      : "text-gray-600 hover:text-[#2E96FF] hover:bg-gray-100"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
-        <div className="mt-6 overflow-x-auto">
-          <table className="min-w-full text-sm border-collapse">
-            <thead>
-              <tr className="text-left border-b border-gray-200">
-                <th className="py-3 pr-6 font-medium text-gray-700">ID</th>
-                <th className="py-3 pr-6 font-medium text-gray-700">Name</th>
-                <th className="py-3 pr-6 font-medium text-gray-700">Email</th>
-                <th className="py-3 pr-6 font-medium text-gray-700">Phone</th>
-                <th className="py-3 pr-6 font-medium text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map(emp => (
-                <tr key={emp.id} className="border-b border-gray-100">
-                  <td className="py-3 pr-6">{emp.id}</td>
-                  <td className="py-3 pr-6">{emp.fullName}</td>
-                  <td className="py-3 pr-6">{emp.email}</td>
-                  <td className="py-3 pr-6">{emp.phone}</td>
-                  <td className="py-3 pr-6">
-                    <button onClick={()=>remove(emp.id)} className="text-red-600">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Person Icon / Dropdown */}
+          <div className="relative mt-3 md:mt-0">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+              aria-label="Account"
+            >
+              <HiOutlineUser className="w-6 h-6 text-gray-700" />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 z-50 w-48 py-2 mt-2 bg-white border rounded shadow-md">
+                <MyAccount /> {/* Fetches & displays account info */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+
+        {/* Mobile Nav */}
+        <nav className="flex flex-wrap gap-2 px-6 py-3 bg-white shadow-sm md:hidden">
+          {adminNavItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `px-3 py-1.5 text-sm rounded-md transition ${
+                  isActive
+                    ? "bg-[#E6F3FF] text-[#0080FF] font-semibold"
+                    : "text-gray-600 hover:text-[#2E96FF] hover:bg-gray-100"
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 max-w-[1440px] mx-auto">
+        <Outlet />
+      </main>
     </div>
   );
 }

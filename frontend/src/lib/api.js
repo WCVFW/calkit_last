@@ -25,6 +25,7 @@ export const authAPI = {
   verifyPhone: (payload) => api.post("/api/auth/verify-phone", payload),
   requestEmailOtp: (payload) => api.post("/api/auth/request-email-otp", payload),
   verifyEmail: (payload) => api.post("/api/auth/verify-email", payload),
+  resetPassword: (payload) => api.post("/api/auth/reset-password", payload),
 };
 
 // User APIs

@@ -84,4 +84,15 @@ public class AuthController {
         emailVerificationService.verifyCode(email, code);
         return ResponseEntity.ok(Map.of("message", "Email verified"));
     }
+
+    // Reset password using email OTP
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String code = body.get("code");
+        String newPassword = body.get("newPassword");
+        if (email == null || code == null || newPassword == null) return ResponseEntity.badRequest().body(Map.of("message", "email, code and newPassword are required"));
+        emailVerificationService.resetPassword(email, code, newPassword);
+        return ResponseEntity.ok(Map.of("message", "Password reset"));
+    }
 }

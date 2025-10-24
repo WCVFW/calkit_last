@@ -24,6 +24,7 @@ import {
   Heart,
   BookOpen,
   DollarSign,
+  User,
 } from "lucide-react";
 
 
@@ -38,7 +39,7 @@ export default function Header({ user, logout }) {
     <>
       {/* ====== Top Header ====== */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center h-16 px-4 md:px-8">
+        <div className="flex items-center justify-between h-16 px-4 mx-auto max-w-7xl md:px-8">
           <Link
             to="/"
             className="text-xl md:text-2xl font-bold text-gray-900 hover:text-[#003366] transition-colors"
@@ -50,16 +51,22 @@ export default function Header({ user, logout }) {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="items-center hidden space-x-8 lg:flex">
             <HeaderNav currentPath={location.pathname} />
           </div>
 
           {/* Right Auth Buttons (Desktop) */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="items-center hidden space-x-4 lg:flex">
             {user ? (
-              <button onClick={logout} className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
-                Logout
-              </button>
+              <>
+                <Link to="/account" className="flex items-center space-x-2 text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
+                  <User className="w-5 h-5" />
+                  <span className="hidden md:inline">{user?.name || user?.email}</span>
+                </Link>
+                <button onClick={logout} className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <Link to="/login" className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
@@ -75,7 +82,7 @@ export default function Header({ user, logout }) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden text-gray-700 p-2"
+            className="p-2 text-gray-700 lg:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -94,20 +101,25 @@ export default function Header({ user, logout }) {
       >
         <HeaderNav currentPath={location.pathname} setMenuOpen={setMenuOpen} />
 
-        <div className="mt-6 border-t pt-6">
+        <div className="pt-6 mt-6 border-t">
           {user ? (
-            <button
-              onClick={() => { logout(); setMenuOpen(false); }}
-              className="w-full bg-[#003366] text-white py-2 rounded-md hover:bg-[#001f3e] transition-colors"
-            >
-              Logout
-            </button>
+            <>
+              <Link to="/account" onClick={() => setMenuOpen(false)} className="block w-full text-center bg-white text-[#003366] border border-gray-200 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                My Account
+              </Link>
+              <button
+                onClick={() => { logout(); setMenuOpen(false); }}
+                className="mt-3 w-full bg-[#003366] text-white py-2 rounded-md hover:bg-[#001f3e] transition-colors"
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <Link to="/login" onClick={() => setMenuOpen(false)} className="block w-full text-center bg-[#003366] text-white py-2 rounded-md hover:bg-[#001f3e] transition-colors">
                 Login
               </Link>
-              <Link to="/signup" onClick={() => setMenuOpen(false)} className="block w-full text-center mt-3 bg-gray-100 text-[#003366] py-2 rounded-md hover:bg-gray-200 transition-colors">
+              <Link to="/signup" onClick={() => setMenuOpen(false)} className="block w-full text-center mt-3 bg_gray-100 text-[#003366] py-2 rounded-md hover:bg-gray-200 transition-colors">
                 Sign Up
               </Link>
             </>
@@ -323,7 +335,7 @@ function NavItem({
   return (
     // Attach the ref to the list item
     <NavigationMenuItem ref={itemRef} className="w-full lg:w-auto lg:relative">
-      <NavigationMenuTrigger className="w-full flex items-center justify-between text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-md px-3 py-2 transition-colors">
+      <NavigationMenuTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-600 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900">
         <div className="flex items-center">
           {icon && <span className="mr-2">{icon}</span>}
           {title}

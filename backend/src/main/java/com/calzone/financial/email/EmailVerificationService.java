@@ -115,6 +115,20 @@ public class EmailVerificationService {
         });
     }
 
+    @Transactional
+    public void resetPassword(@Email String email, String code, String newPassword) {
+        // Re-use verification logic (will mark code used)
+        verifyCode(email, code);
+
+        // Find the user and update password
+        userRepository.findByEmail(email.toLowerCase()).ifPresentOrElse(u -> {
+            u.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(u);
+        }, () -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        });
+    }
+
     private static String generateCode(int length) {
         // Generates a random N-digit number string
         int min = (int) Math.pow(10, length - 1);

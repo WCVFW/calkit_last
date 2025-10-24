@@ -167,6 +167,28 @@ axios.defaults.adapter = async function mockAdapter(config) {
     return ok({ message: "Email verified" });
   }
 
+  // Password reset via email OTP
+  if (url === "/api/auth/reset-password" && method === "post") {
+    const { email, code, newPassword } = safeParse(config.data);
+    if (!email || !code || !newPassword) return err(400, "Email, code and new password required");
+    const stored = getOtp("email", email);
+    if (!stored) return err(400, "OTP expired or not found");
+    if (String(code) !== String(stored)) return err(400, "Invalid code");
+    clearOtp("email", email);
+    const u = getStoredUser() || {
+      id: "1",
+      email: String(email).toLowerCase(),
+      name: "",
+      phone: "",
+      isVerified: true,
+      createdAt: new Date().toISOString(),
+    };
+    // Store a new password field for demo purposes
+    u.password = String(newPassword);
+    setStoredUser(u);
+    return ok({ message: "Password reset" });
+  }
+
   // Phone OTP: request
   if (url === "/api/auth/login-phone" && method === "post") {
     const { phone } = safeParse(config.data);

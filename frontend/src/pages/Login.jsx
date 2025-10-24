@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { setToken, setUser } from "../lib/auth";
 
 export default function Login() {
@@ -13,6 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [showResetLink, setShowResetLink] = useState(false);
   const nav = useNavigate();
 
   const loginPassword = async (e) => {
@@ -29,7 +30,11 @@ export default function Login() {
       else if (role === "EMPLOYEE") nav("/dashboard/employee", { replace: true });
       else nav("/dashboard/user", { replace: true });
     } catch (err) {
-      setMessage(err?.response?.data?.message || err?.response?.data?.error || err?.message || "Login failed");
+      const errMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || "Login failed";
+      setMessage(errMsg);
+      const status = err?.response?.status;
+      const isInvalid = status === 401 || /invalid|incorrect|credentials|not found/i.test(errMsg);
+      setShowResetLink(isInvalid);
     } finally {
       setLoading(false);
     }
@@ -230,6 +235,11 @@ export default function Login() {
             }`}
           >
             {message}
+            {showResetLink && mode === "password" && (
+              <div className="mt-3 text-sm">
+                <Link to={`/forgot-password?email=${encodeURIComponent(email)}`} className="text-[#003366] font-medium hover:underline">Forgot password? Reset here</Link>
+              </div>
+            )}
           </div>
         )}
       </div>
