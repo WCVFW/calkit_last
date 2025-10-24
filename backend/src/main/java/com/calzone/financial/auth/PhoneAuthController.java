@@ -1,7 +1,7 @@
 package com.calzone.financial.auth;
 
-import com.calzone.financial.auth.dto.AuthResponse;
-import com.calzone.financial.auth.dto.UserProfile;
+// import com.calzone.financial.auth.dto.AuthResponse;
+// import com.calzone.financial.auth.dto.UserProfile;
 import com.calzone.financial.sms.PhoneOtp;
 import com.calzone.financial.sms.PhoneOtpRepository;
 import com.calzone.financial.sms.SmsService;
@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -83,7 +84,7 @@ public class PhoneAuthController {
     }
 
     @PostMapping("/verify-phone")
-    public ResponseEntity<AuthResponse> verifyPhone(@Valid @RequestBody VerifyReq req) {
+    public ResponseEntity<Map<String, Object>> verifyPhone(@Valid @RequestBody VerifyReq req) {
         String ph = sanitizePhone(req.phone());
         String code = req.code();
         PhoneOtp latest = otpRepo.findActiveLatest(ph, Instant.now())
@@ -111,7 +112,17 @@ public class PhoneAuthController {
         }
 
         String token = jwtService.generateToken(user);
-        UserProfile profile = new UserProfile(user.getId(), user.getFullName(), user.getEmail(), user.getPhone());
-        return ResponseEntity.ok(new AuthResponse(token, profile));
+        String role = "USER";
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            role = user.getRoles().iterator().next().getName();
+        }
+        java.util.Map<String,Object> userMap = java.util.Map.of(
+                "id", user.getId(),
+                "fullName", user.getFullName(),
+                "email", user.getEmail(),
+                "phone", user.getPhone(),
+                "role", role
+        );
+        return ResponseEntity.ok(java.util.Map.of("token", token, "user", userMap));
     }
 }

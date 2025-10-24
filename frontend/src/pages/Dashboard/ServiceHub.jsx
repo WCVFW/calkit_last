@@ -11,7 +11,7 @@ const tabData = {
     "Licenses/Registrations": {
         "Business Essentials": [
             { title: "GST Registration", desc: "Starts from ₹749₹499", to: "/compliances/gst", categoryKey: "licenses" },
-            { title: "MSME Registration", desc: "Starts from ₹699", to: "/licenses/msme", categoryKey: "licenses" },
+            { title: "MSME Registration", desc: "Starts from ₹699", to: "/Licenses/msme", categoryKey: "licenses" },
             { title: "Food License", desc: "Contact Expert to Get Price", to: "/licenses/fssai", categoryKey: "licenses" },
             { title: "Digital Signature Certificate", desc: "Starts from ₹847", to: "/licenses/dsc", categoryKey: "licenses" },
             { title: "Trade License", desc: "Starts from ₹1499₹999", to: "/licenses/trade", categoryKey: "licenses" }
@@ -103,7 +103,7 @@ const tabData = {
             { title: "Partnership Firm Registration", desc: "Starts from ₹2499", to: "/formation/partnership", categoryKey: "formation" }
         ],
         "Foreign Incorporation": [
-            { title: "US Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/us-inc", categoryKey: "formation" },
+            { title: "US Incorporation", desc: "Starts from ₹1499��999", to: "/formation/us-inc", categoryKey: "formation" },
             { title: "Dubai Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/dubai-inc", categoryKey: "formation" },
             { title: "UK Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/uk-inc", categoryKey: "formation" },
             { title: "Singapore Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/singapore-inc", categoryKey: "formation" }
@@ -581,6 +581,7 @@ export default function ServicesHub() {
     const [activeSubTab, setActiveSubTab] = useState(
         Object.keys(tabData[defaultTab])[0] || ""
     );
+    const [selectedService, setSelectedService] = useState(null);
     const navigate = useNavigate();
     const tabNavRef = useRef(null);
     const tabRefs = useRef({});
@@ -627,8 +628,8 @@ export default function ServicesHub() {
         if (service.to) {
             navigate(service.to);
         } else {
-            // Fallback: open detail drawer (not used in current flow)
-            console.warn('Service page not available, service:', service);
+            // Open detail drawer
+            setSelectedService(service);
         }
     };
 
@@ -720,6 +721,14 @@ export default function ServicesHub() {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Detail Drawer */}
+            {selectedService && (
+                <ServiceDetailDrawer
+                    service={selectedService}
+                    onClose={() => setSelectedService(null)}
+                />
+            )}
 
         </div>
     );

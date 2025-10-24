@@ -26,8 +26,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
     private Boolean phoneVerified = false;
 
@@ -55,6 +55,10 @@ public class User implements UserDetails {
         createdAt = now;
         updatedAt = now;
         if (emailVerified == null) emailVerified = false;
+        if (phone == null) phone = "";
+        if (fullName == null) fullName = "";
+        if (passwordHash == null) passwordHash = ""; // ensure DB NOT NULL column is satisfied
+        if (phoneVerified == null) phoneVerified = false;
     }
 
     @PreUpdate
@@ -74,7 +78,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() { return password; }
+    public String getPassword() { return passwordHash; }
 
     @Override
     public String getUsername() { return email; }
@@ -106,7 +110,7 @@ public class User implements UserDetails {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) { this.passwordHash = password; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

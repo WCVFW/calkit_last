@@ -40,15 +40,19 @@ public class EmailVerificationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
-    public void sendCode(@Email String email) {
+    // ✅ FIX: Removed @Transactional from this field. 
+    @Value("${app.mail.return-code:false}")
+    private boolean returnCode;
+
+    @Transactional // Correctly annotated on the method
+    public String sendCode(@Email String email) {
         // Generate and save code
         String code = generateCode(6);
         Instant now = Instant.now();
-        
+
         // Purge old/expired codes for this email
         repo.purgeByEmailOrExpired(email.toLowerCase(), now);
-        
+
         VerificationCode vc = new VerificationCode();
         vc.setEmail(email.toLowerCase());
         vc.setCodeHash(passwordEncoder.encode(code)); // Hash the code for security
@@ -70,12 +74,19 @@ public class EmailVerificationService {
             mailSender.send(message);
         } catch (MailException e) {
             System.err.println("Failed to send email to " + email + ": " + e.getMessage());
+            if (returnCode) {
+                // In debug mode return the code so frontend can show it
+                return code;
+            }
             // Throwing a public error to the client lets them know the email service failed.
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send verification email. Please check server logs.");
         }
+        // In debug mode return the code
+        if (returnCode) return code;
+        return null;
     }
 
-    @Transactional
+    @Transactional // Correctly annotated on the method
     public void verifyCode(@Email String email, String code) {
         VerificationCode latest = repo.findActiveLatest(email.toLowerCase(), Instant.now())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP expired or not found"));

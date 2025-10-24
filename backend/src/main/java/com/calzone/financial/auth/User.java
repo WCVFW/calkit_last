@@ -3,7 +3,7 @@ package com.calzone.financial.auth;
 import jakarta.persistence.*;
 
 @Entity(name = "com_calzone_financial_auth_User")
-@Table(name = "users")
+@Table(name = "auth_users")
 public class User {
 
     @Id

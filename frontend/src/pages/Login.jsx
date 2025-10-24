@@ -24,9 +24,12 @@ export default function Login() {
       setToken(r.data.token);
       setUser(r.data.user);
       window.dispatchEvent(new Event("auth:update"));
-      nav("/dashboard");
+      const role = r.data.user?.role || "USER";
+      if (role === "ADMIN") nav("/dashboard/admin", { replace: true });
+      else if (role === "EMPLOYEE") nav("/dashboard/employee", { replace: true });
+      else nav("/dashboard/user", { replace: true });
     } catch (err) {
-      setMessage(err?.response?.data?.error || "Login failed");
+      setMessage(err?.response?.data?.message || err?.response?.data?.error || err?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -62,9 +65,12 @@ export default function Login() {
       setToken(r.data.token);
       setUser(r.data.user);
       window.dispatchEvent(new Event("auth:update"));
-      nav("/dashboard");
+      const role = r.data.user?.role || "USER";
+      if (role === "ADMIN") nav("/dashboard/admin", { replace: true });
+      else if (role === "EMPLOYEE") nav("/dashboard/employee", { replace: true });
+      else nav("/dashboard/user", { replace: true });
     } catch (err) {
-      setMessage(err?.response?.data?.error || "OTP verification failed");
+      setMessage(err?.response?.data?.message || err?.response?.data?.error || err?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }

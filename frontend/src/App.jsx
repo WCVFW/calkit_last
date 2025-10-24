@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 import HomePage from "./pages/Dashboard/HomePage";
+import DashboardIndex from "./pages/DashboardIndex";
 import CompliancesPage from "./pages/Dashboard/CompliancesPage";
 import CrmPage from "./pages/Dashboard/CrmPage";
 import CrmDashboard from "./pages/Dashboard/CrmDashboard";
@@ -16,6 +17,10 @@ import DocumentsPage from "./pages/Dashboard/DocumentsPage";
 import ReportsPage from "./pages/Dashboard/ReportsPage";
 import ConsultPage from "./pages/Dashboard/ConsultPage";
 import UsersPage from "./pages/Dashboard/UsersPage";
+const AdminEmployees = React.lazy(() => import('./pages/Dashboard/AdminEmployees'));
+import AdminDashboard from "./pages/Dashboard/AdminDashboard";
+import EmployeeDashboard from "./pages/Dashboard/EmployeeDashboard";
+import UserDashboard from "./pages/Dashboard/UserDashboard";
 import Placeholder from "./pages/Placeholder";
 import ServiceLoader from "./pages/ServiceLoader";
 import Header from "./components/Header";
@@ -62,14 +67,13 @@ export default function App() {
   const hideLayout =
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
-    location.pathname.startsWith("/dashboard") ||
     location.pathname === "/ConsultanExpert/talkToIP";
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
+    <div className="flex flex-col min-h-screen font-sans bg-slate-50 text-slate-900">
       <PageLoader show={pageLoading} />
       {!hideLayout && <Header user={user} logout={logout} />}
-      <main className="flex-1 container mx-auto">
+      <main className="container flex-1 mx-auto">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -85,7 +89,7 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<HomePage />} />
+            <Route index element={<DashboardIndex />} />
             <Route path="compliances" element={<CompliancesPage />} />
             <Route path="servicehub" element={<ServicesHub />} />
             <Route path="crm" element={<CrmPage />} />
@@ -98,6 +102,10 @@ export default function App() {
             <Route path="reports" element={<ReportsPage />} />
             <Route path="consult" element={<ConsultPage />} />
             <Route path="users" element={<UsersPage />} />
+            <Route path="admin" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminDashboard /></ProtectedRoute>} />
+            <Route path="admin/employees" element={<ProtectedRoute allowedRoles={["ADMIN"]}><React.Suspense fallback={null}><AdminEmployees /></React.Suspense></ProtectedRoute>} />
+            <Route path="employee" element={<ProtectedRoute allowedRoles={["EMPLOYEE"]}><EmployeeDashboard /></ProtectedRoute>} />
+            <Route path="user" element={<ProtectedRoute allowedRoles={["USER"]}><Dashboard /></ProtectedRoute>} />
             <Route path="*" element={<Placeholder />} />
           </Route>
           <Route path="*" element={<ServiceLoader />} />

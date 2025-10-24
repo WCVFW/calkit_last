@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,6 +25,13 @@ public class AdminController {
     }
 
     public record CreateEmployee(@Email String email, @NotBlank String phone, @NotBlank String password, @NotBlank String fullName) {}
+
+    private static record EmployeeDto(Long id, String fullName, String email, String phone, java.util.List<String> roles) {}
+
+    private static EmployeeDto toDto(User u) {
+        java.util.List<String> roleNames = u.getRoles() == null ? java.util.List.of() : u.getRoles().stream().map(r -> r.getName()).toList();
+        return new EmployeeDto(u.getId(), u.getFullName(), u.getEmail(), u.getPhone(), roleNames);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/employees")
@@ -43,7 +49,23 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/employees")
-    public List<User> listEmployees() {
-        return users.findAll().stream().filter(u -> u.getRoles().stream().anyMatch(r -> r.getName().equals("EMPLOYEE"))).toList();
+    public java.util.List<EmployeeDto> listEmployees() {
+        return users.findAll().stream()
+                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getName().equals("EMPLOYEE")))
+                .map(AdminController::toDto)
+                .toList();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/employees/{id}")
+    public ResponseEntity<EmployeeDto> getEmployee(@PathVariable Long id) {
+        return users.findById(id).map(u -> ResponseEntity.ok(toDto(u))).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/employees/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        users.findById(id).ifPresent(u -> users.delete(u));
+        return ResponseEntity.noContent().build();
     }
 }

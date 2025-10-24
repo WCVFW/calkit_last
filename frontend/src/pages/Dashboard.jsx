@@ -4,6 +4,13 @@ import { openRazorpayCheckout } from "@/lib/utils";
 
 // Static data for the small service cards, organized by tab
 
+const tabKeys = [
+  "Licenses/Registrations",
+  "Business Setup",
+  "International",
+  "Consultations",
+];
+
 const defaultTab = "Licenses/Registrations";
 
 export default function Dashboard() {
@@ -100,11 +107,11 @@ export default function Dashboard() {
     >
       <div className="flex items-center p-4">
         <div>
-          <div className="text-white font-semibold text-lg">{title}</div>
-          <div className="text-xs text-opacity-90 text-white mt-1">{desc}</div>
+          <div className="text-lg font-semibold text-white">{title}</div>
+          <div className="mt-1 text-xs text-white text-opacity-90">{desc}</div>
         </div>
         {/* Arrow Icon matching the image */}
-        <div className="ml-auto flex items-center justify-center">
+        <div className="flex items-center justify-center ml-auto">
           <svg
             className="w-6 h-6 text-white"
             fill="none"
@@ -146,7 +153,7 @@ export default function Dashboard() {
           />
         </svg>
       </div>
-      <div className="font-semibold text-gray-800 text-sm">{title}</div>
+      <div className="text-sm font-semibold text-gray-800">{title}</div>
       <div className="text-xs text-[#515554] mt-1 line-clamp-2">{desc}</div>
       <div className="mt-3 text-xs text-[#5FA1F9] font-bold hover:text-[#2E96FF] transition-colors">
         View Details
@@ -156,40 +163,19 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] font-[Inter] p-4 md:p-0">
-      {/* Top Navigation Bar */}
-      <header className="bg-white shadow-md">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 py-4">
-          <div className="w-auto text-[#0080FF] font-extrabold text-2xl">
-            L<span className="text-gray-700">OGO</span>
-          </div>
-          <nav className="flex items-center gap-4 lg:gap-6 text-sm">
-            <NavLink href="/dashboard">Home</NavLink>
-            <NavLink href="/compliances">Compliances</NavLink>
-            <NavLink href="/servicehub" active>
-              Service Hub
-            </NavLink>
-            <NavLink href="/calendar">Calender</NavLink>
-            <NavLink href="/documents">Documents</NavLink>
-            <NavLink href="/reports">Reports</NavLink>
-            <NavLink href="/consult">Consult</NavLink>
-            <NavLink href="/users">Users & Roles</NavLink>
-            <div className="text-gray-500 font-bold">...</div>
-          </nav>
-        </div>
-      </header>
 
       {/* Main Content Container */}
       <div className="max-w-[1200px] mx-auto mt-8">
-        <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8">
+        <div className="p-6 bg-white shadow-2xl rounded-xl md:p-8">
           {/* Large Service Cards Section */}
-          <div className="flex flex-col md:flex-row gap-6 mb-8">
+          <div className="flex flex-col gap-6 mb-8 md:flex-row">
             {largeServiceCards.map((card, index) => (
               <ServiceCardLarge key={index} {...card} />
             ))}
           </div>
 
           {/* Tab Navigation (To simulate different pages) */}
-          <nav className="flex flex-wrap border-b border-gray-200 mb-6 -mx-6 px-6 pt-4">
+          <nav className="flex flex-wrap px-6 pt-4 mb-6 -mx-6 border-b border-gray-200">
             {tabKeys.map((tab) => (
               <button
                 key={tab}
@@ -207,7 +193,7 @@ export default function Dashboard() {
           </nav>
 
           {/* Payments Quick Action */}
-          <div className="mt-10 border-t pt-8">
+          <div className="pt-8 mt-10 border-t">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Payments</h3>
               <button
@@ -252,7 +238,7 @@ export default function Dashboard() {
               </button>
             </div>
             {payMsg && (
-              <div className="text-sm mb-3 text-slate-600">{payMsg}</div>
+              <div className="mb-3 text-sm text-slate-600">{payMsg}</div>
             )}
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
@@ -292,7 +278,7 @@ export default function Dashboard() {
           </div>
 
           {/* CRM Section */}
-          <div className="mt-10 border-t pt-8">
+          <div className="pt-8 mt-10 border-t">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">CRM — Leads</h3>
               <div className="text-sm text-slate-600">
@@ -355,7 +341,7 @@ export default function Dashboard() {
           </div>
 
           {/* Bottom Call to Action Buttons */}
-          <div className="mt-8 flex justify-end gap-4 border-t pt-6">
+          <div className="flex justify-end gap-4 pt-6 mt-8 border-t">
             <a
               href="/callback/general"
               className="inline-flex justify-center items-center border border-gray-400 text-gray-700 font-medium py-2.5 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
@@ -407,24 +393,24 @@ function LeadCreate({ onCreated }) {
   };
 
   return (
-    <form onSubmit={submit} className="bg-slate-50 rounded-lg p-4 border">
-      <div className="flex flex-col md:flex-row gap-3">
+    <form onSubmit={submit} className="p-4 border rounded-lg bg-slate-50">
+      <div className="flex flex-col gap-3 md:flex-row">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="flex-1 border rounded px-3 py-2"
+          className="flex-1 px-3 py-2 border rounded"
           placeholder="Lead name"
         />
         <input
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="flex-1 border rounded px-3 py-2"
+          className="flex-1 px-3 py-2 border rounded"
           placeholder="Service (optional)"
         />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="border rounded px-3 py-2"
+          className="px-3 py-2 border rounded"
         >
           <option>New</option>
           <option>In Progress</option>
@@ -437,7 +423,7 @@ function LeadCreate({ onCreated }) {
           {loading ? "Adding..." : "Add Lead"}
         </button>
       </div>
-      {msg && <div className="text-sm text-red-600 mt-2">{msg}</div>}
+      {msg && <div className="mt-2 text-sm text-red-600">{msg}</div>}
     </form>
   );
 }
@@ -482,24 +468,16 @@ function LeadRow({ lead, onUpdated, onDeleted }) {
             setStatus(e.target.value);
             update({ status: e.target.value });
           }}
-          className="border rounded px-2 py-1 text-xs"
+          className="px-2 py-1 text-xs border rounded"
         >
           <option>New</option>
           <option>In Progress</option>
           <option>Closed</option>
         </select>
       </td>
-      <td className="py-2 pr-4">
-        {lead.created_at ? new Date(lead.created_at).toLocaleString() : "-"}
-      </td>
+      <td className="py-2 pr-4">{lead.created_at ? new Date(lead.created_at).toLocaleString() : "-"}</td>
       <td className="py-2 pr-4 text-right">
-        <button
-          onClick={remove}
-          disabled={loading}
-          className="text-red-600 text-xs"
-        >
-          Delete
-        </button>
+        <button onClick={remove} disabled={loading} className="text-xs text-red-600">Delete</button>
       </td>
     </tr>
   );
