@@ -19,7 +19,7 @@ export default function UserDashboard() {
   const handleLogout = () => {
     clearToken();
     clearUser();
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (
@@ -76,8 +76,8 @@ export default function UserDashboard() {
 
             {menuOpen && (
               <div className="absolute right-0 py-2 mt-2 bg-white border rounded shadow-md w-44">
-                <a
-                  href="/dashboard/profile"
+                    <a
+                  href="/dashboard/user/profile"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   My Account

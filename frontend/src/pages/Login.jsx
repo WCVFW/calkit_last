@@ -14,6 +14,7 @@ export default function Login() {
   const [message, setMessage] = useState(null);
   const [generatedOtp, setGeneratedOtp] = useState(null);
   const [showResetLink, setShowResetLink] = useState(false);
+  const [showResendVerification, setShowResendVerification] = useState(false);
   const nav = useNavigate();
 
   const loginPassword = async (e) => {
@@ -35,6 +36,11 @@ export default function Login() {
       const status = err?.response?.status;
       const isInvalid = status === 401 || /invalid|incorrect|credentials|not found/i.test(errMsg);
       setShowResetLink(isInvalid);
+
+      // If server says email not verified, offer resend verification
+      if (/email not verified/i.test(errMsg)) {
+        setShowResendVerification(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -238,6 +244,28 @@ export default function Login() {
             {showResetLink && mode === "password" && (
               <div className="mt-3 text-sm">
                 <Link to={`/forgot-password?email=${encodeURIComponent(email)}`} className="text-[#003366] font-medium hover:underline">Forgot password? Reset here</Link>
+              </div>
+            )}
+
+            {showResendVerification && mode === "password" && (
+              <div className="mt-3 text-sm">
+                <button
+                  onClick={async () => {
+                    try {
+                      setLoading(true);
+                      await axios.post('/api/auth/request-email-otp', { email });
+                      setMessage('Verification code sent to your email. Redirecting to verification page...');
+                      setTimeout(() => nav(`/verify-otp?email=${encodeURIComponent(email)}`), 900);
+                    } catch (e) {
+                      setMessage(e?.response?.data?.message || 'Failed to send verification code');
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  className="text-[#003366] font-medium hover:underline"
+                >
+                  Resend verification email
+                </button>
               </div>
             )}
           </div>

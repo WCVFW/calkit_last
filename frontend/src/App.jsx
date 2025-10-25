@@ -26,6 +26,7 @@ import MyAccount from "./pages/MyAccount";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import EmployeeDashboard from "./pages/Dashboard/EmployeeDashboard";
 import UserDashboard from "./pages/Dashboard/UserDashboard";
+import OrderDetailPage from "./pages/Dashboard/OrderDetailPage";
 const AdminEmployees = React.lazy(() => import("./pages/Dashboard/AdminEmployees"));
 
 /* ---------------------- Components ---------------------- */
@@ -73,11 +74,12 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [location]);
 
-  // Hide header/footer on login/signup/consult pages
+  // Hide header/footer on login/signup/consult pages and on dashboard routes
   const hideLayout =
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
-    location.pathname === "/ConsultanExpert/talkToIP";
+    location.pathname === "/ConsultanExpert/talkToIP" ||
+    location.pathname.startsWith("/dashboard");
 
   return (
     <div className="flex flex-col min-h-screen font-sans bg-slate-50 text-slate-900">
@@ -149,6 +151,13 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* ---------------------- Public Order Detail (non-dashboard) ---------------------- */}
+          <Route path="/orders/:id" element={
+            <ProtectedRoute>
+              <OrderDetailPage />
+            </ProtectedRoute>
+          } />
 
           {/* ---------------------- Fallback / Loader ---------------------- */}
           <Route path="*" element={<ServiceLoader />} />

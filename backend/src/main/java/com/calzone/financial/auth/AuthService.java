@@ -26,21 +26,13 @@ public class AuthService {
                 .fullName(fullName == null ? "" : fullName.trim())
                 .phone(phone == null ? "" : phone.trim())
                 .build();
+        // Ensure emailVerified is false by default (handled by entity lifecycle)
         userRepository.save(u);
-        String token = jwtUtil.generateToken(email);
+
+        // Return minimal response without issuing auth token. User must verify email to activate account.
         java.util.Map<String,Object> res = new java.util.HashMap<>();
-        res.put("token", token);
-        String role = "USER";
-        if (u.getRoles()!=null && !u.getRoles().isEmpty()) {
-            role = u.getRoles().iterator().next().getName();
-        }
-        res.put("user", java.util.Map.of(
-                "id", u.getId(),
-                "fullName", u.getFullName(),
-                "email", u.getEmail(),
-                "phone", u.getPhone(),
-                "role", role
-        ));
+        res.put("message", "User registered. Please verify your email to activate the account.");
+        res.put("email", u.getEmail());
         return res;
     }
 
@@ -67,6 +59,11 @@ public class AuthService {
         }
 
         if (!ok) throw new IllegalArgumentException("Invalid credentials");
+
+        // Enforce email verification: user must verify email before logging in
+        if (u.getEmailVerified() == null || !u.getEmailVerified()) {
+            throw new IllegalArgumentException("Email not verified. Please verify your email before logging in.");
+        }
 
         String token = jwtUtil.generateToken(email);
         java.util.Map<String,Object> res = new java.util.HashMap<>();

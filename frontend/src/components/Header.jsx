@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // Assuming cn is a utility function for Tailwind CSS class merging
 import { cn } from "@/lib/utils";
 import {
@@ -58,15 +58,9 @@ export default function Header({ user, logout }) {
           {/* Right Auth Buttons (Desktop) */}
           <div className="items-center hidden space-x-4 lg:flex">
             {user ? (
-              <>
-                <Link to="/account" className="flex items-center space-x-2 text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
-                  <User className="w-5 h-5" />
-                  <span className="hidden md:inline">{user?.name || user?.email}</span>
-                </Link>
-                <button onClick={logout} className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
-                  Logout
-                </button>
-              </>
+              <div className="relative">
+                <AccountMenu user={user} logout={logout} />
+              </div>
             ) : (
               <>
                 <Link to="/login" className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
@@ -104,11 +98,14 @@ export default function Header({ user, logout }) {
         <div className="pt-6 mt-6 border-t">
           {user ? (
             <>
-              <Link to="/account" onClick={() => setMenuOpen(false)} className="block w-full text-center bg-white text-[#003366] border border-gray-200 py-2 rounded-md hover:bg-gray-50 transition-colors">
+              <Link to={user?.role === 'ADMIN' ? '/dashboard/admin' : user?.role === 'EMPLOYEE' ? '/dashboard/employee' : '/dashboard/user'} onClick={() => setMenuOpen(false)} className="block w-full text-center bg-white text-[#003366] border border-gray-200 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                Dashboard
+              </Link>
+              <Link to={user?.role === 'ADMIN' ? '/dashboard/admin/profile' : user?.role === 'EMPLOYEE' ? '/dashboard/employee/profile' : '/dashboard/user/profile'} onClick={() => setMenuOpen(false)} className="mt-3 block w-full text-center bg-white text-[#003366] border border-gray-200 py-2 rounded-md hover:bg-gray-50 transition-colors">
                 My Account
               </Link>
               <button
-                onClick={() => { logout(); setMenuOpen(false); }}
+                onClick={() => { logout(); setMenuOpen(false); window.location.href = '/'; }}
                 className="mt-3 w-full bg-[#003366] text-white py-2 rounded-md hover:bg-[#001f3e] transition-colors"
               >
                 Logout
@@ -119,7 +116,7 @@ export default function Header({ user, logout }) {
               <Link to="/login" onClick={() => setMenuOpen(false)} className="block w-full text-center bg-[#003366] text-white py-2 rounded-md hover:bg-[#001f3e] transition-colors">
                 Login
               </Link>
-              <Link to="/signup" onClick={() => setMenuOpen(false)} className="block w-full text-center mt-3 bg_gray-100 text-[#003366] py-2 rounded-md hover:bg-gray-200 transition-colors">
+              <Link to="/signup" onClick={() => setMenuOpen(false)} className="block w-full text-center mt-3 bg-gray-100 text-[#003366] py-2 rounded-md hover:bg-gray-200 transition-colors">
                 Sign Up
               </Link>
             </>
@@ -127,6 +124,42 @@ export default function Header({ user, logout }) {
         </div>
       </div>
     </>
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Account Menu (user dropdown)
+---------------------------------------------------------------------------*/
+function AccountMenu({ user, logout }) {
+  const [open, setOpen] = useState(false);
+  const nav = useNavigate();
+
+  const goToDashboard = () => {
+    const path = user?.role === 'ADMIN' ? '/dashboard/admin' : user?.role === 'EMPLOYEE' ? '/dashboard/employee' : '/dashboard/user';
+    setOpen(false);
+    nav(path);
+  };
+
+  const handleLogout = () => {
+    setOpen(false);
+    if (logout) logout();
+    nav('/');
+  };
+
+  return (
+    <div className="relative inline-block text-left">
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 px-3 py-1 rounded hover:bg-gray-100">
+        <User className="w-5 h-5 text-[#003366]" />
+        <span className="hidden md:inline text-[#003366]">{user?.fullName || user?.name || user?.email}</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 z-50 py-1 mt-2 bg-white border rounded shadow-md w-44">
+          <button onClick={goToDashboard} className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-50">Dashboard</button>
+          <Link to={user?.role === 'ADMIN' ? '/dashboard/admin/profile' : user?.role === 'EMPLOYEE' ? '/dashboard/employee/profile' : '/dashboard/user/profile'} onClick={() => setOpen(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Account</Link>
+          <button onClick={handleLogout} className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-50">Logout</button>
+        </div>
+      )}
+    </div>
   );
 }
 

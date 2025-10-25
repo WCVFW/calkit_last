@@ -31,6 +31,7 @@ export const authAPI = {
 // User APIs
 export const userAPI = {
   me: () => api.get("/api/user/me"),
+  update: (payload) => api.put("/api/user/me", payload),
 };
 
 // Workflow APIs

@@ -10,7 +10,6 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [signupComplete, setSignupComplete] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState(null);
   const nav = useNavigate();
 
   // Validation helpers
@@ -35,23 +34,24 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      // Send data to backend
+      // Create account on backend
       await axios.post("/api/auth/signup", { fullName, email, phone, password });
 
-      // Request OTP for email verification
+      // Request OTP for email verification (sent via email only)
       try {
-        const otpResponse = await axios.post("/api/auth/request-email-otp", { email });
-        setGeneratedOtp(otpResponse.data.code || "");
+        await axios.post("/api/auth/request-email-otp", { email });
       } catch (e) {
-        console.warn("Could not retrieve OTP for display:", e.message);
-        setGeneratedOtp("123456"); // Fallback for display
+        console.warn("Could not send OTP email:", e?.message || e);
       }
 
-      setMessage("Signup successful! Check your email for the OTP code.");
+      setMessage("Signup successful! We've sent a verification code to your email.");
       setSignupComplete(true);
 
       // Clear password field
       setPassword("");
+
+      // Redirect user to verification page with email pre-filled
+      nav(`/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setMessage(
         err?.response?.data?.error || err?.response?.data?.message || "Signup failed. Try again later"
@@ -68,49 +68,7 @@ export default function Signup() {
           Create New Account
         </h2>
 
-        {signupComplete ? (
-          <div className="space-y-4">
-            <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
-              <p className="mb-2 text-sm font-medium text-blue-900">
-                Email: {email}
-              </p>
-              <p className="mb-3 text-xs text-blue-700">
-                Use this verification code to complete your signup:
-              </p>
-              <div className="p-3 text-center bg-blue-100 border-2 border-blue-300 rounded">
-                <p className="text-2xl font-bold text-[#003366] tracking-wider">
-                  {generatedOtp}
-                </p>
-              </div>
-              <p className="mt-3 text-xs text-blue-700">
-                Code expires in 5 minutes. Save this code to verify your email.
-              </p>
-            </div>
-
-            <button
-              onClick={() => nav(`/verify-otp?email=${encodeURIComponent(email)}`)}
-              className="w-full bg-[#003366] text-white py-2 rounded transition-colors hover:bg-[#002244]"
-            >
-              Go to Verification
-            </button>
-
-            <button
-              onClick={() => {
-                setSignupComplete(false);
-                setGeneratedOtp(null);
-                setFullName("");
-                setEmail("");
-                setPhone("");
-                setPassword("");
-                setMessage(null);
-              }}
-              className="w-full border border-[#003366] text-[#003366] py-2 rounded transition-colors hover:bg-blue-50"
-            >
-              Create Another Account
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={submit}>
+        <form onSubmit={submit}>
             <label className="block text-sm font-medium text-slate-700">
               Full Name
             </label>
@@ -166,7 +124,6 @@ export default function Signup() {
               {loading ? "Signing up..." : "Sign up"}
             </button>
           </form>
-        )}
 
         {message && (
           <div

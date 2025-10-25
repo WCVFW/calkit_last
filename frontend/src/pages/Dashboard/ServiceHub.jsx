@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { XMarkIcon, ChevronRightIcon, BanknotesIcon, ShieldCheckIcon, DocumentMagnifyingGlassIcon, RocketLaunchIcon, ClockIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 
 // ===========================================
-// STATIC DATA (No changes needed here)
+// STATIC DATA
 // ===========================================
 
 const tabData = {
@@ -103,7 +103,7 @@ const tabData = {
             { title: "Partnership Firm Registration", desc: "Starts from ₹2499", to: "/formation/partnership", categoryKey: "formation" }
         ],
         "Foreign Incorporation": [
-            { title: "US Incorporation", desc: "Starts from ₹1499��999", to: "/formation/us-inc", categoryKey: "formation" },
+            { title: "US Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/us-inc", categoryKey: "formation" },
             { title: "Dubai Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/dubai-inc", categoryKey: "formation" },
             { title: "UK Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/uk-inc", categoryKey: "formation" },
             { title: "Singapore Incorporation", desc: "Starts from ₹1499₹999", to: "/formation/singapore-inc", categoryKey: "formation" }
@@ -122,7 +122,10 @@ const tabData = {
 const defaultTab = "Licenses/Registrations";
 const tabKeys = Object.keys(tabData);
 
-// --- 2. Small Compliance Card (Ensures uniform height) ---
+// ===========================================
+// 1. ComplianceCardSmall Component
+// ===========================================
+
 const ComplianceCardSmall = ({ title, desc, to, categoryKey, onClick }) => (
     <div
         onClick={() => onClick({ title, desc, to, categoryKey })}
@@ -154,7 +157,9 @@ const ComplianceCardSmall = ({ title, desc, to, categoryKey, onClick }) => (
 );
 
 
-// --- 3. Detail Drawer Component Utilities ---
+// ===========================================
+// 2. Detail Drawer Component Utilities
+// ===========================================
 
 const DetailBlock = ({ title, content, icon: Icon }) => (
     <div className="flex items-start p-4 space-x-3 border border-gray-100 rounded-lg bg-gray-50">
@@ -187,11 +192,30 @@ const getServiceSpecificContent = (service) => {
             { icon: BanknotesIcon, title: "E-Filing & Acknowledgment", desc: "The returns are filed electronically, and the official government acknowledgment is provided." },
             { icon: CheckCircleIcon, title: "Audit Support", desc: "Ongoing support provided for any notices or inquiries." },
         ],
+        // Defaulting to a sensible set for 'company', 'formation', 'closure' etc.
         legal: [
             { icon: DocumentMagnifyingGlassIcon, title: "Requirement Gathering", desc: "Detailed consultation to understand the scope and intent of the agreement." },
             { icon: ShieldCheckIcon, title: "Drafting by Lawyer", desc: "The contract/agreement is drafted by a legal expert to ensure enforceability." },
             { icon: ClockIcon, title: "Review & Revisions", desc: "Up to two rounds of revisions based on client feedback." },
             { icon: CheckCircleIcon, title: "Final E-Sign Delivery", desc: "The final, legally vetted document is delivered for execution." },
+        ],
+        company: [ // Using a sensible default for company changes
+            { icon: DocumentMagnifyingGlassIcon, title: "Data Collection & Vetting", desc: "Gathering required director/partner, shareholding, or objective data." },
+            { icon: ShieldCheckIcon, title: "Drafting Resolutions & Forms", desc: "Preparation of Board Resolutions, EGM/AGM minutes, and statutory forms." },
+            { icon: BanknotesIcon, title: "RoC Filing", desc: "Filing of required E-forms (e.g., MGT-14, DIR-12, INC-24) with the Registrar of Companies." },
+            { icon: CheckCircleIcon, title: "Approval & Certificate Update", desc: "Receiving the official RoC approval and updated company certificate/documents." },
+        ],
+        formation: [ // Using a sensible default for new business
+            { icon: DocumentMagnifyingGlassIcon, title: "Name Approval", desc: "Filing for name reservation (RUN) with the RoC or equivalent authority." },
+            { icon: ShieldCheckIcon, title: "Document Submission", desc: "Filing of all incorporation documents (MoA, AoA, etc.) and fees." },
+            { icon: BanknotesIcon, title: "PAN, TAN, Bank A/C", desc: "Application for PAN, TAN, and guidance on opening the corporate bank account." },
+            { icon: CheckCircleIcon, title: "Certificate of Incorporation", desc: "Final delivery of the Certificate of Incorporation/Registration and other key documents." },
+        ],
+        closure: [ // Using a sensible default for closure
+            { icon: DocumentMagnifyingGlassIcon, title: "Compliance Check", desc: "Verifying all pending tax and statutory liabilities." },
+            { icon: ShieldCheckIcon, title: "Application Filing", desc: "Preparation and filing of the closure application (e.g., STK-2 or GST cancellation request)." },
+            { icon: ClockIcon, title: "Authority Processing", desc: "Monitoring the process through the respective government authority." },
+            { icon: CheckCircleIcon, title: "Final Approval Order", desc: "Delivery of the final order/notification confirming the successful closure/cancellation." },
         ]
     };
 
@@ -365,7 +389,7 @@ const getServiceSpecificContent = (service) => {
             },
             {
                 id: 'process_docs_group',
-                title: '2. Process & Documents',
+                title: 'Process & Documents',
                 content: (
                     <div className="space-y-4">
                         {/* Process Steps */}
@@ -378,7 +402,7 @@ const getServiceSpecificContent = (service) => {
                                 className="flex items-start p-3 space-x-3 transition-shadow bg-white border border-gray-200 rounded-lg hover:shadow-md"
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.05 }}
+                                transition={{ duration: 0.2, delay: index * 0.05 }}
                             >
                                 <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-[#E6F3FF]">
                                     <step.icon className="w-4 h-4 text-[#2E96FF]" />
@@ -415,8 +439,12 @@ const getServiceSpecificContent = (service) => {
     };
 };
 
+// ===========================================
+// 3. ServiceDetailDrawer Component (The Popup)
+// ===========================================
 
 const ServiceDetailDrawer = ({ service, onClose }) => {
+    // Disable body scroll when drawer is open
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
@@ -425,7 +453,8 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
     }, []);
 
     const { sections, isSpecific } = getServiceSpecificContent(service);
-    // New State and Refs for Navigation
+    
+    // State and Refs for Navigation
     const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id || null);
     const sectionRefs = useRef({});
     const contentRef = useRef(null);
@@ -439,9 +468,13 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
     const scrollToSection = (id) => {
         const element = sectionRefs.current[id];
         if (element && contentRef.current) {
-            // Use the element's offsetTop to scroll to the top of the section
-            // The sticky header and nav bar are accounted for in the Intersection Observer margin
-            contentRef.current.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+            // Calculate scroll position relative to the scrollable container's top
+            const offset = element.offsetTop;
+            
+            // Adjust the offset to account for the sticky header and nav bar (approx 120-150px)
+            const scrollPosition = offset - 120; 
+
+            contentRef.current.scrollTo({ top: scrollPosition, behavior: 'smooth' });
             setActiveSectionId(id);
         }
     };
@@ -452,15 +485,15 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
 
         const observerOptions = {
             root: contentRef.current,
-            // Adjusted margin to trigger intersection high up (around the sticky nav bar)
-            rootMargin: '-150px 0px -50% 0px',
+            // Trigger intersection high up the viewport (just below the sticky nav)
+            rootMargin: '-120px 0px -60% 0px', 
             threshold: 0,
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                // If a section is intersecting the top margin, set it as active
                 if (entry.isIntersecting) {
+                    // Set the current intersecting section as active
                     setActiveSectionId(entry.target.id);
                 }
             });
@@ -472,7 +505,7 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
         elements.forEach(el => observer.observe(el));
 
         return () => elements.forEach(el => observer.unobserve(el));
-    }, [sections, service.title]); // Dependency array ensures it reruns when the service changes
+    }, [sections, service.title]); 
 
     return (
         <motion.div
@@ -504,7 +537,7 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
                     </button>
                 </div>
 
-                {/* Horizontal Navigation (Sticky below header) */}
+                {/* Horizontal Navigation (Sticky below header - the split/switch) */}
                 <div className="sticky top-[65px] md:top-[70px] z-20 bg-white border-b shadow-md px-4 md:px-8">
                     <nav className="flex py-2 space-x-4 overflow-x-auto md:py-3 md:space-x-6 whitespace-nowrap">
                         {sections.map((section) => (
@@ -512,9 +545,9 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
                                 key={section.id}
                                 onClick={() => scrollToSection(section.id)}
                                 className={`flex-shrink-0 text-xs md:text-sm font-medium pb-2 transition-colors duration-200
-              ${activeSectionId === section.id
+                                    ${activeSectionId === section.id
                                         ? "text-[#2E96FF] border-b-2 border-[#2E96FF] font-semibold"
-                                        : "text-gray-500 hover:text-gray-700 hover:border-b-2 hover:border-gray-300 border-transparent"
+                                        : "text-gray-500 border-transparent hover:text-gray-700 hover:border-b-2 hover:border-gray-300"
                                     }`}
                             >
                                 {section.title}
@@ -535,7 +568,8 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
                                 key={section.id}
                                 className="mb-8"
                                 id={section.id}
-                                ref={(el) => (sectionRefs.current[section.id] = el)}
+                                // Attach ref for Intersection Observer to track scroll position
+                                ref={(el) => (sectionRefs.current[section.id] = el)} 
                             >
                                 <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3 border-b-2 border-[#2E96FF] pb-1">
                                     {section.title}
@@ -552,7 +586,7 @@ const ServiceDetailDrawer = ({ service, onClose }) => {
                 <div className="sticky bottom-0 z-40 bg-white p-3 md:p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] border-t border-gray-100 flex-shrink-0">
                     <div className="flex flex-col gap-2 sm:flex-row">
                         <button
-                            onClick={() => window.dispatchEvent(new CustomEvent('openCheckout', { detail: { service } }))}
+                            onClick={() => console.log("Dispatching openCheckout event for:", service.title)}
                             className="flex-1 text-center bg-[#2E96FF] text-white py-2 md:py-3 rounded-md text-sm md:text-base font-semibold shadow-md hover:bg-[#007acc] transition duration-200 transform hover:scale-[1.01]"
                         >
                             {isSpecific ? "Avail Service" : `Get Started`}
@@ -582,10 +616,11 @@ export default function ServicesHub() {
         Object.keys(tabData[defaultTab])[0] || ""
     );
     const [selectedService, setSelectedService] = useState(null);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Assume react-router-dom is correctly configured
     const tabNavRef = useRef(null);
     const tabRefs = useRef({});
 
+    // Effect to reset sub-tab when main tab changes
     useEffect(() => {
         const firstSubTab = Object.keys(tabData[activeTab])[0];
         if (firstSubTab) {
@@ -596,6 +631,7 @@ export default function ServicesHub() {
         setSelectedService(null);
     }, [activeTab]);
 
+    // Effect for smooth scrolling the main tab navigation bar
     useEffect(() => {
         const activeTabElement = tabRefs.current[activeTab];
         const navContainer = tabNavRef.current;
@@ -624,13 +660,8 @@ export default function ServicesHub() {
     };
 
     const handleCardClick = (service) => {
-        // Navigate to the dedicated service page (if available)
-        if (service.to) {
-            navigate(service.to);
-        } else {
-            // Open detail drawer
-            setSelectedService(service);
-        }
+        // This opens the ServiceDetailDrawer popup
+        setSelectedService(service);
     };
 
     return (
@@ -652,7 +683,7 @@ export default function ServicesHub() {
                             ref={el => tabRefs.current[tab] = el}
                             onClick={() => handleTabChange(tab)}
                             className={`flex-shrink-0 pb-3 px-4 md:px-6 text-sm md:text-base font-medium transition-colors border-b-2
-                                ${activeTab === tab
+                                ${activeTab === tab
                                     ? "text-[#2E96FF] border-[#2E96FF] font-semibold"
                                     : "text-gray-500 border-transparent hover:text-gray-800 hover:border-gray-300"
                                 }`}
@@ -670,7 +701,7 @@ export default function ServicesHub() {
                                 key={sub}
                                 onClick={() => setActiveSubTab(sub)}
                                 className={`py-2 px-3 md:px-4 text-xs sm:text-sm rounded-full transition-colors duration-200
-                                    ${activeSubTab === sub
+                                    ${activeSubTab === sub
                                         ? "bg-[#2E96FF] text-white font-semibold shadow-md"
                                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                     }`}
@@ -722,13 +753,15 @@ export default function ServicesHub() {
                 </div>
             </div>
 
-            {/* Detail Drawer */}
-            {selectedService && (
-                <ServiceDetailDrawer
-                    service={selectedService}
-                    onClose={() => setSelectedService(null)}
-                />
-            )}
+            {/* Detail Drawer - The Popup that opens on card click */}
+            <AnimatePresence>
+                {selectedService && (
+                    <ServiceDetailDrawer
+                        service={selectedService}
+                        onClose={() => setSelectedService(null)}
+                    />
+                )}
+            </AnimatePresence>
 
         </div>
     );
