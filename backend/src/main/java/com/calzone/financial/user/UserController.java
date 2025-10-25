@@ -24,20 +24,29 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfile> me(@AuthenticationPrincipal User user) {
+    public ResponseEntity<?> me(@AuthenticationPrincipal User user) {
+        // Returns 401 if the JWT token is missing or invalid.
+        if (user == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthenticated"));
+        }
+        
+        // Constructs the profile DTO from the authenticated user.
         UserProfile profile = new UserProfile(user.getId(), user.getFullName(), user.getEmail(), user.getPhone());
         return ResponseEntity.ok(profile);
     }
 
-    @PutMapping("/me")
+    @PutMapping("/me") 
     public ResponseEntity<?> updateMe(@AuthenticationPrincipal User user, @RequestBody Map<String, String> body) {
-        if (user == null) return ResponseEntity.status(401).build();
+        if (user == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthenticated"));
+        }
 
         String fullName = body.get("fullName");
         String phone = body.get("phone");
         String password = body.get("password");
 
         boolean changed = false;
+        
         if (fullName != null) {
             user.setFullName(fullName.trim());
             changed = true;
@@ -46,16 +55,19 @@ public class UserController {
             user.setPhone(phone.trim());
             changed = true;
         }
+        
         if (password != null && !password.isBlank()) {
+            // IMPORTANT: Passwords must be encoded before saving.
             user.setPassword(passwordEncoder.encode(password));
             changed = true;
         }
 
         if (changed) {
+            // Saves the changes to the user that was retrieved from the security context.
             userRepository.save(user);
         }
 
         UserProfile profile = new UserProfile(user.getId(), user.getFullName(), user.getEmail(), user.getPhone());
-        return ResponseEntity.ok(Map.of("user", profile, "message", "Profile updated"));
+        return ResponseEntity.ok(Map.of("user", profile, "message", "Profile updated successfully"));
     }
 }

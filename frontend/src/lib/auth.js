@@ -1,20 +1,24 @@
-import axios from "axios";
-
 const TOKEN_KEY = "authToken";
 const USER_KEY = "authUser";
 
+/**
+ * Sets the auth token in localStorage. The API interceptor 
+ * in lib/api.js will automatically pick this up for all future requests.
+ * @param {string} token 
+ */
 export function setToken(token) {
   localStorage.setItem(TOKEN_KEY, token);
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
 
+/**
+ * Removes the auth token from localStorage.
+ */
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
-  delete axios.defaults.headers.common["Authorization"];
 }
 
 export function setUser(user) {
@@ -34,8 +38,11 @@ export function clearUser() {
   localStorage.removeItem(USER_KEY);
 }
 
+/**
+ * This function is now simplified. It only returns the user profile 
+ * from localStorage.
+ * @returns {object | null}
+ */
 export function initAuth() {
-  const t = getToken();
-  if (t) axios.defaults.headers.common["Authorization"] = `Bearer ${t}`;
   return getUser();
 }
