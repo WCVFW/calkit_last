@@ -1,0 +1,74 @@
+/* Global typography: use system Arial family and responsive font sizing */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-1: 228 100% 50%;
+  --brand-2: 190 100% 40%;
+  --font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  /* Base font-size in pixels — can be adjusted by media queries below */
+  --base-font-size: 16px;
+}
+
+/* Apply Arial globally; important to override other font settings */
+* {
+  font-family: var(--font-family) !important;
+}
+
+/* Responsive root font-size (affects rem-based sizes and Tailwind "text-base") */
+html {
+  font-size: var(--base-font-size);
+}
+
+/* Small devices — slightly smaller text */
+@media (max-width: 640px) {
+  :root { --base-font-size: 14px; }
+}
+
+/* Medium devices — default */
+@media (min-width: 641px) and (max-width: 1023px) {
+  :root { --base-font-size: 16px; }
+}
+
+/* Large devices */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  :root { --base-font-size: 18px; }
+}
+
+/* Extra large screens */
+@media (min-width: 1440px) {
+  :root { --base-font-size: 20px; }
+}
+
+@layer base {
+  html,
+  body {
+    @apply font-sans;
+    font-family: var(--font-family);
+    /* Ensure body scales with root font-size */
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-family);
+    font-weight: 600;
+  }
+
+  p,
+  span,
+  div,
+  button,
+  input,
+  textarea,
+  select {
+    font-family: var(--font-family);
+  }
+}

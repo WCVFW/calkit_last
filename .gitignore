@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.idea/
+.vscode/
+*.log
+target/
+*.iml
+*.class
+/.mvn
+/.settings
+.DS_Store
+frontend/node_modules/
+services/*/target/

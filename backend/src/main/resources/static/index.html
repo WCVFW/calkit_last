@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vakilsearch AI Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f6f8fa; margin:0; padding:0 }
+    header { background:#0b5fff; color:white; padding:20px }
+    .container { max-width:900px; margin:32px auto; background:white; padding:24px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+    .chat { border:1px solid #e6e9ef; padding:12px; height:220px; overflow:auto }
+    .row { display:flex; gap:8px; margin-top:12px }
+    .btn { background:#0b5fff; color:white; padding:8px 12px; border:none; border-radius:6px; cursor:pointer }
+    input[type=file] { padding:6px }
+    .field { margin-top:12px }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Vakilsearch — AI Demo</h1>
+  </header>
+  <div class="container">
+    <h2>Chatbot (public)</h2>
+    <div id="chat" class="chat"></div>
+    <div class="row">
+      <input id="name" placeholder="Your name" />
+      <input id="message" placeholder="Type your message" style="flex:1" />
+      <button id="send" class="btn">Send</button>
+    </div>
+
+    <h2 style="margin-top:20px">Document OCR Validation</h2>
+    <div class="field">
+      <input id="file" type="file" />
+      <button id="uploadBtn" class="btn">Validate (mocked)</button>
+    </div>
+    <pre id="ocrResult" style="background:#fafafa;border-radius:6px;padding:12px;margin-top:12px"></pre>
+
+    <h2 style="margin-top:20px">Quick Links</h2>
+    <ul>
+      <li><a href="/api/ai/kb/search" onclick="event.preventDefault();kbSearch();">Demo KB Search</a></li>
+      <li><a href="/api/ai/docs/draft" onclick="event.preventDefault();draftDoc();">Demo Draft Document</a></li>
+    </ul>
+  </div>
+
+  <script>
+    const chatEl = document.getElementById('chat');
+    document.getElementById('send').addEventListener('click', async () => {
+      const name = document.getElementById('name').value;
+      const message = document.getElementById('message').value;
+      append('You: ' + message);
+      const res = await fetch('/api/ai/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userName:name, message})});
+      const data = await res.json();
+      append('Bot: ' + data.reply);
+      if (data.suggestions) append('Suggestions: ' + data.suggestions.join(', '));
+    });
+
+    document.getElementById('uploadBtn').addEventListener('click', async () => {
+      const f = document.getElementById('file').files[0];
+      if (!f) { alert('choose a file'); return }
+      const res = await fetch('/api/ai/ocr/validate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename:f.name})});
+      const data = await res.json();
+      document.getElementById('ocrResult').textContent = JSON.stringify(data, null, 2);
+    });
+
+    function append(text){ const el = document.createElement('div'); el.textContent = text; chatEl.appendChild(el); chatEl.scrollTop = chatEl.scrollHeight }
+
+    async function kbSearch(){ const res = await fetch('/api/ai/kb/search', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({query:'company incorporation timeline'})}); const data = await res.json(); alert(data.answer) }
+    async function draftDoc(){ const res = await fetch('/api/ai/docs/draft', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type:'MOA/AOA', clientName:'Demo Pvt Ltd'})}); const data = await res.json(); alert(data.draftText) }
+  </script>
+</body>
+</html>
