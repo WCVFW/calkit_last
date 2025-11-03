@@ -31,7 +31,7 @@ import UserDashboard from "./pages/Dashboard/UserDashboard";
 import OrderDetailPage from "./pages/Dashboard/OrderDetailPage";
 import AdminReports from "./pages/Dashboard/AdminReports";
 import AdminOrdersPage from "./pages/Dashboard/AdminOrdersPage";
-import EmployeeTasksPage from "./pages/Dashboard/EmployeeTasksPage"; // ✅ FIXED IMPORT
+import EmployeeTasksPage from "./pages/Dashboard/EmployeeTasksPage";
 import EmployeeHomePage from "./pages/Dashboard/EmployeeHomePage";
 const AdminEmployees = React.lazy(() =>
   import("./pages/Dashboard/AdminEmployees")
@@ -47,10 +47,11 @@ import CheckoutModal from "./components/CheckoutModal";
 
 /* ---------------------- Auth ---------------------- */
 import { initAuth, getUser, clearToken, clearUser } from "./lib/auth";
+import AdminHome from "./pages/Dashboard/AdminHome";
 
 /* ===============================
- 🔹 MAIN APP COMPONENT
- =============================== */
+ 🔹 MAIN APP COMPONENT
+ =============================== */
 export default function App() {
   const [user, setUser] = useState(null);
   const [pageLoading, setPageLoading] = useState(false);
@@ -148,8 +149,8 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<div>Admin Home Overview</div>} />
-            <Route path="employees" element={<AdminEmployees />} />
+            <Route index element={<AdminHome/>} />
+            <Route path="employees" element={<React.Suspense fallback={<ServiceLoader />}><AdminEmployees /></React.Suspense>} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="orders" element={<AdminOrdersPage />} />
             <Route path="profile" element={<MyAccount />} />
@@ -164,8 +165,8 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<EmployeeHomePage />} />
-            <Route path="assigned" element={<EmployeeTasksPage />} /> {/* ✅ FIXED PATH */}
+            {/* <Route index element={<EmployeeHomePage />} /> */}
+            <Route path="assigned" element={<EmployeeTasksPage />} />
             <Route path="task/:orderId" element={<OrderDetailPage />} />
             <Route path="profile" element={<MyAccount />} />
           </Route>
@@ -192,8 +193,8 @@ export default function App() {
 }
 
 /* ===============================
- 🔹 ROLE-BASED DASHBOARD ROUTER
- =============================== */
+ 🔹 ROLE-BASED DASHBOARD ROUTER
+ =============================== */
 function DashboardRouter({ user }) {
   if (!user) return <DashboardIndex />;
 

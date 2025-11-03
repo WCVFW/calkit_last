@@ -13,25 +13,26 @@ export default defineConfig({
     host: true,
     port: 5173,
     hmr: {
-      overlay: false,
+      overlay: false, // prevent fullscreen error overlays
     },
     watch: {
-      // Ignore OneDrive sync folders and node_modules to avoid frequent restarts
+      // Enable polling so Vite detects changes in OneDrive
+      usePolling: true,
+      interval: 1000, // check for changes every second
       ignored: [
         '**/node_modules/**',
         '**/.git/**',
-        '**/OneDrive/**',
-        '**/OneDrive - **/**',
-        '**/OneDrive*/**',
-        '**/*~',
-        '**/*.lnk',
-        '**/desktop.ini',
+        '**/*.tmp',
         '**/*.TMP',
-        '**/*.tmp'
-      ]
+        '**/desktop.ini',
+      ],
     },
     proxy: {
-      "/api": "http://localhost:8080",
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });
