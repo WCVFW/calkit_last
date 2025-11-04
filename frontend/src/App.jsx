@@ -90,12 +90,15 @@ export default function App() {
     location.pathname === "/ConsultanExpert/talkToIP" ||
     location.pathname.startsWith("/dashboard");
 
+  // Make homepage full width, other pages use the centered container
+  const isHome = location.pathname === "/";
+
   return (
-    <div className="flex flex-col min-h-screen font-sans bg-slate-50 text-slate-900">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900">
       <PageLoader show={pageLoading} />
       {!hideLayout && <Header user={user} logout={logout} />}
 
-      <main className="container flex-1 mx-auto">
+      <main className={isHome ? "flex-1 w-full" : "container flex-1 mx-auto"}>
         <Routes>
           {/* ---------------------- Public Pages ---------------------- */}
           <Route path="/" element={<Home />} />

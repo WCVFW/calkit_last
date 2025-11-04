@@ -1,381 +1,183 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import NAV from "@/data/navigation";
-
-// --- Import Images ---
-import Hero from "../assets/Hero.png";
-import C1 from "../assets/c1.png";
-import C2 from "../assets/c2.png";
-import C3 from "../assets/c3.png";
-
+import ComplianceSection from "../pages/ComplianceSection"
 export default function Home() {
-  const [q, setQ] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(-1);
-  const inputRef = React.useRef(null);
-  const containerRef = React.useRef(null);
-  const navigate = useNavigate();
-  const items = React.useMemo(
-    () => Object.entries(NAV).map(([path, meta]) => ({ path, ...meta })),
-    [],
-  );
-  const results = React.useMemo(() => {
-    const t = q.trim().toLowerCase();
-    if (t.length < 2) return [];
-    return items
-      .filter(
-        (i) =>
-          i.title.toLowerCase().includes(t) ||
-          i.category.toLowerCase().includes(t),
-      )
-      .slice(0, 10);
-  }, [q, items]);
-  React.useEffect(() => {
-    function onClick(e) {
-      if (containerRef.current && !containerRef.current.contains(e.target))
-        setOpen(false);
-    }
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
-  function select(path) {
-    setOpen(false);
-    setQ("");
-    setActiveIndex(-1);
-    navigate(path);
-  }
   return (
-    <div className="bg-[#E6F2FF] overflow-x-hidden font-[Poppins,sans-serif]">
-      {/* Hero Section */}
-      <section className="relative h-[450px] sm:h-[550px] md:h-[650px] lg:h-[750px]">
-        <img
-          src={Hero}
-          alt="Hero"
-          className="absolute inset-0 object-cover w-full h-full"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(33,150,243,0.23)] via-[rgba(0,51,102,0.8)] to-[#036]" />
-
-        <div className="container relative flex flex-col items-center justify-center h-full px-4 mx-auto text-center">
-          <h1 className="text-white font-bold text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-[64px] leading-tight max-w-4xl">
-            Your Legal & Business <br /> Solution, Simplified
-          </h1>
-
-          {/* Search Bar */}
-          <div ref={containerRef} className="relative w-full max-w-3xl mt-8">
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-              <div className="flex items-center flex-1 px-4 py-3 bg-white rounded-lg shadow-md">
-                <svg
-                  className="w-6 h-6 mr-3 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 26 26"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.87}
-                    d="M18.953 18.961l4.875 4.875M21.672 11.914a9.75 9.75 0 11-19.5 0 9.75 9.75 0 0119.5 0z"
-                  />
-                </svg>
-                <input
-                  ref={inputRef}
-                  value={q}
-                  onChange={(e) => {
-                    setQ(e.target.value);
-                    setOpen(true);
-                    setActiveIndex(-1);
-                  }}
-                  onFocus={() => setOpen(true)}
-                  onKeyDown={(e) => {
-                    if (!open && e.key !== "Escape") setOpen(true);
-                    if (e.key === "ArrowDown") {
-                      e.preventDefault();
-                      setActiveIndex((i) =>
-                        Math.min(i + 1, results.length - 1),
-                      );
-                    }
-                    if (e.key === "ArrowUp") {
-                      e.preventDefault();
-                      setActiveIndex((i) => Math.max(i - 1, 0));
-                    }
-                    if (e.key === "Enter") {
-                      if (results[activeIndex])
-                        return select(results[activeIndex].path);
-                      if (results[0]) return select(results[0].path);
-                    }
-                    if (e.key === "Escape") setOpen(false);
-                  }}
-                  type="text"
-                  placeholder="Search for legal, business, or services"
-                  className="flex-1 text-sm text-gray-600 outline-none sm:text-base md:text-lg"
-                />
-              </div>
-              <button
-                onClick={() => {
-                  if (results[0]) select(results[0].path);
-                }}
-                className="bg-[#036] text-white px-5 sm:px-7 md:px-8 py-3 rounded-lg font-medium text-sm sm:text-base md:text-lg transition hover:bg-[#024]"
-              >
-                Find Your Service
-              </button>
+    <div className="items-start bg-white">
+      <div className="flex flex-col justify-between bg-[#FAF4E7] w-full pb-[1px] px-6 sm:px-10 lg:px-20 py-16">
+        {/* --- Hero Section --- */}
+        <div className="flex flex-col items-end self-stretch mb-[79px]">
+          <div className="flex items-start">
+            {/* Left Text Section */}
+            <div className="flex flex-col items-start max-w-lg gap-6 mb-10 lg:mb-0">
+              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+                Your Legal, <br /> Tax, <br /> Compliance <br /> Partner
+              </h1>
+              <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
+                Bala is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since
+                the 1500s, when an unknown printer...
+              </p>
             </div>
-            {open && results.length > 0 && (
-              <ul className="absolute left-0 right-0 z-10 mt-2 overflow-auto bg-white border border-gray-100 rounded-md shadow-lg max-h-72">
-                {results.map((r, idx) => (
-                  <li key={r.path}>
-                    <button
-                      onMouseEnter={() => setActiveIndex(idx)}
-                      onClick={() => select(r.path)}
-                      className={`w-full text-left px-4 py-2 flex flex-col ${idx === activeIndex ? "bg-gray-100" : "bg-white"} hover:bg-gray-100`}
-                    >
-                      <span className="text-sm font-medium text-gray-800">
-                        {r.title}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {r.category}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
 
-          {/* CTA Cards */}
-          <div className="flex flex-wrap justify-center gap-6 mt-10">
-            {[
-              {
-                to: "/BusinessSetup/plc",
-                label: "Start Your Business",
-                imgSrc: C1,
-              },
-              { to: "/dashboard", label: "Manage Your Business", imgSrc: C2 },
-              {
-                to: "/ConsultanExpert/talkToLawyer",
-                label: "Protect Your Business",
-                imgSrc: C3,
-              },
-            ].map((item, i) => (
-              <Link
-                key={i}
-                to={item.to}
-                className="relative bg-white rounded-xl shadow-lg flex flex-col items-center justify-center
-                           w-[85%] sm:w-64 md:w-72 lg:w-80 p-5 hover:shadow-2xl transition-transform transform hover:scale-105"
-              >
-                <div className="flex items-center justify-center w-16 h-16 mb-4 overflow-hidden sm:w-20 sm:h-20 md:w-24 md:h-24">
-                  <img
-                    src={item.imgSrc}
-                    alt={item.label}
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-                <p className="text-base font-semibold text-center text-gray-800 sm:text-lg md:text-xl">
-                  {item.label}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+            {/* Right Image Section */}
+            <div className="flex flex-col items-start w-[769px] relative">
+              <div className="relative flex flex-col items-start self-stretch">
+                <div className="self-stretch bg-[url('https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/krdd4lio_expires_30_days.png')] bg-cover bg-center">
+                  <div className="flex flex-col items-end self-stretch mb-[100px]">
+                    <div className="flex items-start gap-4">
+                      <div className="flex flex-col items-start bg-[#111111] w-[68px] py-[15px] px-4 mt-[154px]">
+                        <img
+                          src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/wr6bbedy_expires_30_days.png"
+                          className="w-[34px] h-[34px] object-fill"
+                          alt="icon"
+                        />
+                      </div>
+                      <div
+                        className="flex flex-col items-start w-[524px] relative bg-cover bg-center "
+                        style={{
+                          backgroundImage:
+                            "url('assets/home.png'')",
+                        }}
+                      >
+                        {/* Yellow background overlay */}
+                        <div className="self-stretch bg-[#FAD481] h-[772px] opacity-90 " />
 
-      {/* Heading Section */}
-      <section className="py-10 mx-3 bg-white sm:mx-6 md:mx-12 lg:mx-32 sm:p-8">
-        <h2 className="text-2xl font-semibold text-center sm:text-3xl md:text-4xl lg:text-5xl">
-          From startup to scale-up <br /> we power your growth
-        </h2>
-      </section>
+                        {/* Foreground image */}
+                        <img
+                          src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/ad8eeshf_expires_30_days.png"
+                          className="w-[335px] h-[377px] absolute bottom-[119px] left-[-84px] object-fill"
+                          alt="main visual"
+                        />
+                      </div>
 
-      {/* Services Section */}
-      <section className="bg-[#036] mx-3 sm:mx-6 md:mx-12 lg:mx-32 p-6 md:p-10 lg:p-14">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-          {/* Left Column */}
-          <div>
-            {[
-              {
-                title: "Start a Business",
-                items: [
-                  "Private Limited Company Registration",
-                  "Limited Liability Partnership Registration",
-                  "One Person Company Registration",
-                  "Sole Proprietorship Registration",
-                  "Producer Company Registration",
-                  "Partnership Firm Registration",
-                  "Startup India Registration",
-                  "NGO Registration",
-                ],
-              },
-              {
-                title: "Operate with Clarity",
-                items: [
-                  "GST Registration",
-                  "Change Company Address",
-                  "Director Replacement",
-                  "Mandatory Annual Filings",
-                  "Labor Compliance",
-                  "Shop and Establishment License",
-                  "Accounting & Tax",
-                ],
-              },
-              {
-                title: "Secure a Legacy",
-                items: [
-                  "Trademark Registration",
-                  "Copyright Registration",
-                  "Patent Registration",
-                  "IP Infringement",
-                  "Design Registration",
-                  "Free Legal Document",
-                  "Business Contracts",
-                ],
-              },
-            ].map((section, idx) => (
-              <div key={idx} className="relative mb-12">
-                <div className="absolute left-[28px] top-10 bottom-0 w-[3px] bg-gradient-to-b from-blue-400 to-transparent" />
-                <div className="relative z-10 flex items-center gap-3 mb-4 sm:gap-4 sm:mb-6">
-                  <div className="relative flex flex-col items-center">
-                    <svg
-                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
-                      viewBox="0 0 72 72"
-                      aria-hidden="true"
-                    >
-                      <circle
-                        cx="21.5755"
-                        cy="33.1288"
-                        r="17.6152"
-                        fill="#2196F3"
-                      />
-                      <circle
-                        cx="43.1536"
-                        cy="45.5858"
-                        r="17.6152"
-                        fill="#2196F3"
-                      />
-                      <circle
-                        opacity="0.47"
-                        cx="24"
-                        cy="48"
-                        r="24"
-                        fill="#000D1A"
-                      />
-                      <circle
-                        opacity="0.47"
-                        cx="48"
-                        cy="24"
-                        r="24"
-                        fill="#000D1A"
-                      />
-                      <circle cx="34.5" cy="38.5" r="12.5" fill="#B8DBFF" />
-                    </svg>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-white capitalize sm:text-2xl md:text-3xl">
-                    {section.title}
-                  </h3>
                 </div>
-                <ul className="space-y-2 text-sm font-light text-white sm:space-y-3 sm:text-base md:text-lg pl-14">
-                  {section.items.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {/* Right Column - Animated Bubbles */}
-          <div className="flex flex-col items-center justify-around gap-6 sm:gap-8">
-            {[
-              {
-                src: "https://api.builder.io/api/v1/image/assets/TEMP/959feee3eee9528bc346a7c66dda752400b02f3a?width=538",
-                size: "w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56",
-                animate: { y: [0, -25, 0], x: [0, 25, 0] },
-              },
-              {
-                src: "https://api.builder.io/api/v1/image/assets/TEMP/3d32e547220713bb25d24504a9b2385dabdc0361?width=414",
-                size: "w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52",
-                animate: { y: [0, 25, 0], x: [0, -25, 0] },
-              },
-              {
-                src: "https://api.builder.io/api/v1/image/assets/TEMP/314a4d1385f20e4a17ab42702fa37a8eef2105e7?width=560",
-                size: "w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56",
-                animate: { y: [0, -25, 0], x: [0, 25, 0] },
-              },
-              {
-                src: "https://api.builder.io/api/v1/image/assets/TEMP/3e17ffc7453e78bd07189440ee21eec510a3f490?width=489",
-                size: "w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52",
-                animate: { y: [0, 25, 0], x: [0, -25, 0] },
-              },
-            ].map((bubble, i) => (
-              <motion.div
-                key={i}
-                animate={bubble.animate}
-                transition={{
-                  repeat: Infinity,
-                  duration: 6 + i,
-                  ease: "easeInOut",
-                }}
-                className={`${bubble.size} rounded-full overflow-hidden shadow-lg relative`}
-              >
-                <motion.div
-                  className="absolute inset-0 rounded-full bg-blue-400/30 blur-2xl"
-                  animate={{ opacity: [0.3, 0.8, 0.3] }}
-                  transition={{ repeat: Infinity, duration: 4 }}
-                />
                 <img
-                  src={bubble.src}
-                  alt="Bubble"
-                  className="object-cover w-full h-full rounded-full"
+                  src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/484hqft5_expires_30_days.png"
+                  className="w-[179px] h-[273px] absolute top-[17px] left-[-43px] object-fill"
+                  alt="side visual"
                 />
-              </motion.div>
-            ))}
+                <div className="bg-black w-[796px] h-[68px] absolute bottom-[151px] right-[800px]" />
+              </div>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* 360 Command Center Section */}
-      <section className="mt-16">
-        <h2 className="text-center font-semibold mb-12 text-[clamp(1.25rem,4vw,3rem)]">
-         Your Command Center for Compliance
-        </h2>
-        <div className="relative max-w-7xl mx-auto flex flex-col items-center bg-[url('https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/s3genjtx_expires_30_days.png')] bg-cover bg-center pt-28 sm:pt-32 pb-24 sm:pb-28 px-6 sm:px-12 gap-12">
-          <div className="flex flex-col items-center px-6 py-3 shadow-md bg-white/70 backdrop-blur-md rounded-2xl">
-            <span className="text-base font-bold text-gray-900 sm:text-lg">
-              Unified Dashboard
-            </span>
+        {/* --- About Section --- */}
+        <div className="flex items-start mb-[358px] ml-[209px]">
+          {/* Image Stack */}
+          <div className="flex flex-col items-start w-[282px] mr-[42px] gap-10">
+            <div className="relative flex flex-col items-center self-stretch">
+              {/* Main front image */}
+              <img
+                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/fd8425va_expires_30_days.png"
+                className="w-[282px] h-[330px] object-fill relative z-10"
+                alt="about-bg"
+              />
+
+              {/* Left decorative image (partly visible & behind main) */}
+              <img
+                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/18zm36xw_expires_30_days.png"
+                className="w-[212px] h-[143px] absolute top-[93px] left-[-90px] object-fill z-0 opacity-80"
+                alt="decor1"
+              />
+
+              {/* Bottom-right decorative image (behind main) */}
+              <img
+                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/dsx6a9an_expires_30_days.png"
+                className="w-[190px] h-[285px] absolute bottom-[-145px] right-[-171px] object-fill z-0 opacity-80"
+                alt="decor2"
+              />
+            </div>
+
+            <div className="flex flex-col items-start bg-black py-[15px] px-[17px] ml-[101px]">
+              <img
+                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/wqvz9jyn_expires_30_days.png"
+                className="w-[34px] h-[34px] object-fill"
+                alt="icon"
+              />
+            </div>
           </div>
 
-          <div className="relative flex flex-col items-center justify-center w-full lg:flex-row">
-            <div className="flex flex-col items-center px-4 py-2 mb-4 shadow-md bg-white/70 backdrop-blur-md rounded-2xl lg:absolute lg:left-6 lg:top-1/2 lg:-translate-y-1/2 lg:mb-0">
-              <span className="text-sm font-bold text-gray-900 sm:text-base">
-                Automated Compliance
-              </span>
-            </div>
-
-            <div className="flex items-center justify-center w-64 h-64 mx-2 bg-gray-300 rounded-full shadow-lg sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
-              <svg
-                className="w-40 h-40 sm:w-48 sm:h-48"
-                viewBox="0 0 352 352"
-                aria-hidden="true"
-              >
-                <circle cx="176" cy="176" r="93" fill="#7EAED3" />
-              </svg>
-            </div>
-
-            <div className="flex flex-col items-center px-4 py-2 mt-4 shadow-md bg-white/70 backdrop-blur-md rounded-2xl lg:absolute lg:right-6 lg:top-1/2 lg:-translate-y-1/2 lg:mt-0">
-              <span className="text-sm font-bold text-gray-900 sm:text-base">
-                Secure Documents Vault
-              </span>
-            </div>
+          {/* Right Content */}
+          <div className="flex flex-col items-start bg-[#FFAF00] w-[68px] py-[15px] px-[17px] mt-[35px] mr-[231px]">
+            <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/zbm16ruw_expires_30_days.png"
+              className="w-[34px] h-[34px] object-fill"
+              alt="icon"
+            />
           </div>
 
-          <div className="flex flex-col items-center px-4 py-2 mt-4 shadow-md bg-white/70 backdrop-blur-md rounded-2xl sm:mt-6">
-            <span className="text-sm font-bold text-gray-900 sm:text-base">
-              Expert Connect
-            </span>
+          <div className="flex flex-col items-start w-[373px] mt-[77px] gap-[43px]">
+            <div className="flex flex-col items-start self-stretch gap-2.5">
+              <span className="text-[#111111] text-[49px] font-libre">About</span>
+              <span className="text-[#111111] text-[21px] font-bold">Simplifying Legal & Compliance</span>
+              <span className="text-[#6A6863] text-[15px] whitespace-pre-line">
+                Bala is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                standard dummy text ever since the 1500s, when an unknown printer
+              </span>
+            </div>
+            <span className="text-[#111111] text-[15px] cursor-pointer underline">Learn more</span>
           </div>
         </div>
-      </section>
+
+        {/* --- Mid Section --- */}
+        <span className="text-black text-[54px] font-libre text-center w-[669px] mb-[153px] ml-[379px] whitespace-pre-line">
+          From startup to scale-up we power your growth
+        </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-[299px] px-10">
+          {/* Start a Business */}
+          <div className="relative flex flex-col justify-center items-start h-[244px] rounded-xl overflow-hidden">
+            <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/18zm36xw_expires_30_days.png"
+              className="absolute inset-0 object-cover w-full h-full"
+              alt="start-bg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#F8D280]/90 via-[#F8D280]/50 to-transparent"></div>
+            <div className="relative z-10 pl-10">
+              <span className="text-[#111111] text-4xl font-libre">Start a Business</span>
+            </div>
+          </div>
+
+          {/* Manage Your Business */}
+          <div className="relative flex flex-col justify-center items-start h-[244px] rounded-xl overflow-hidden">
+            <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/69090vx7_expires_30_days.png"
+              className="absolute inset-0 object-cover w-full h-full"
+              alt="manage-bg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#F8D280]/90 via-[#F8D280]/50 to-transparent"></div>
+            <div className="relative z-10 pl-10">
+              <span className="text-[#111111] text-4xl font-libre">Manage your Business</span>
+            </div>
+          </div>
+
+          {/* Protect Your Business */}
+          <div className="relative flex flex-col justify-center items-start h-[244px] rounded-xl overflow-hidden">
+            <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wubvUxErdY/ymbubdyn_expires_30_days.png"
+              className="absolute inset-0 object-cover w-full h-full"
+              alt="protect-bg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#F8D280]/90 via-[#F8D280]/50 to-transparent"></div>
+            <div className="relative z-10 pl-10">
+              <span className="text-[#111111] text-4xl font-libre">Protect your Business</span>
+            </div>
+          </div>
+        </div>
+
+        {/* --- Compliance Section --- */}
+        <div className="">
+          {/* 🏷️ Heading above the Compliance section */}
+          <h2 className="relative z-10 text-center font-semibold mt-8 mb-16 px-4 text-[clamp(1.5rem,4vw,3rem)] drop-shadow-xl">
+            Your Command Center for Compliance
+          </h2>
+
+          {/* 🧩 Compliance Section */}
+          <ComplianceSection />
+        </div>
+      </div>
     </div>
   );
 }
