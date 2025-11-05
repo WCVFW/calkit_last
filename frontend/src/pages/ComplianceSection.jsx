@@ -4,12 +4,19 @@ import "tailwindcss/tailwind.css";
 export default function ComplianceSection() {
     return (
         <section
-            className="relative w-full min-h-screen flex flex-col items-center justify-center 
-      bg-[url('src/assets/ty.png')] bg-cover bg-center 
-      font-['Libre_Bodoni'] text-gray-900 overflow-hidden"
+            className="
+    relative left-1/2 right-1/2 
+    -mx-[50vw] w-screen 
+    min-h-screen 
+    flex flex-col items-center justify-center 
+    bg-cover bg-center 
+    font-['Libre_Bodoni'] text-gray-900 overflow-hidden
+  "
         >
+
+
             {/* 🟡 Subtle yellow gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#F8D280]/60 via-[#F8D280]/30 to-transparent mix-blend-multiply"></div>
+            {/* <div className="absolute inset-0 bg-gradient-to-r from-[#F8D280]/60 via-[#F8D280]/30 to-transparent mix-blend-multiply"></div> */}
 
             {/* ⚙️ Central container */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full h-full px-6 py-16 max-w-7xl sm:px-10">

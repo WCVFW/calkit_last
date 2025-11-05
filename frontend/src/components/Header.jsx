@@ -45,9 +45,9 @@ export default function Header({ user, logout }) {
             className="text-xl md:text-2xl font-bold text-gray-900 hover:text-[#003366] transition-colors"
             onClick={() => setMenuOpen(false)}
           >
-            <span className="text-[#003366]">C</span>alzone{" "}
-            <span className="text-[#003366]">F</span>inancial{" "}
-            <span className="text-[#003366]">S</span>ervices
+            <span className="text-[#003366]"></span>Logo{" "}
+            {/* <span className="text-[#003366]">F</span>inancial{" "}
+            <span className="text-[#003366]">S</span>ervices */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -66,7 +66,7 @@ export default function Header({ user, logout }) {
                 <Link to="/login" className="text-[#003366] font-medium hover:text-[#001f3e] transition-colors">
                   Login
                 </Link>
-                <Link to="/signup" className="bg-[#003366] text-white px-4 py-2 rounded-md hover:bg-[#001f3e] transition-colors">
+                <Link to="/signup" className="bg-black text-white px-4 py-2 rounded-md hover:bg-[#001f3e] transition-colors">
                   Sign Up
                 </Link>
               </>
@@ -420,7 +420,7 @@ function MenuGroup({
 }) {
   return (
     <div>
-      <p className="mb-2 text-sm font-semibold text-gray-900">{title}</p>
+      <p className="mb-2 font-sans text-sm font-semibold text-gray-900">{title}</p>
       <ul
         className="space-y-1 overflow-y-auto"
         // Limits height and enables vertical scrolling (as requested)

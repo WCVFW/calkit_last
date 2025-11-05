@@ -71,7 +71,7 @@ const resourceLinks = [
 
 const LawyerCard = ({ lawyer }) => (
   <motion.div
-    className="p-6 bg-white rounded-xl shadow-lg border-t-4 border-indigo-100 hover:shadow-xl transition-shadow"
+    className="p-6 transition-shadow bg-white border-t-4 border-indigo-100 shadow-lg rounded-xl hover:shadow-xl"
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.3 }}
@@ -80,39 +80,39 @@ const LawyerCard = ({ lawyer }) => (
     <div className="w-12 h-12 bg-[#2E96FF] rounded-full mb-3 flex items-center justify-center text-white text-xl font-bold">
       {lawyer.name.charAt(0)}
     </div>
-    <h3 className="font-bold text-xl mb-1">{lawyer.name}</h3>
-    <p className="text-indigo-600 font-medium mb-2">{lawyer.exp}</p>
-    <p className="text-gray-600 text-sm">{lawyer.desc}</p>
+    <h3 className="mb-1 text-xl font-bold">{lawyer.name}</h3>
+    <p className="mb-2 font-medium text-indigo-600">{lawyer.exp}</p>
+    <p className="text-sm text-gray-600">{lawyer.desc}</p>
   </motion.div>
 );
 
 // StatPill is now fully aligned with the image: white background, dark text, no icon
 const StatPill = ({ count, label }) => (
-  <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-md">
+  <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-md">
     <span className="text-[#222428] text-sm font-semibold tracking-wider">
-      <span className="font-bold mr-1">{count}</span>{label}
+      <span className="mr-1 font-bold">{count}</span>{label}
     </span>
   </div>
 );
 
 const ReviewBox = ({ score, reviews, source }) => (
   <div className="bg-white/10 rounded-xl p-6 shadow-lg w-full max-w-[220px] flex flex-col items-center justify-center border border-white/20">
-    <div className="text-yellow-400 flex items-center mb-2">
+    <div className="flex items-center mb-2 text-yellow-400">
       {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-yellow-400" />)}
     </div>
     <h4 className="text-sm font-semibold text-white/80">{source}</h4>
-    <p className="mt-1 font-bold text-3xl text-white">{score}</p>
+    <p className="mt-1 text-3xl font-bold text-white">{score}</p>
     <p className="text-sm text-white/90">{reviews}</p>
   </div>
 );
 
 const ServiceItem = ({ title, description, icon }) => (
-  <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-indigo-500 hover:shadow-xl transition">
+  <div className="p-6 transition bg-white border-l-4 border-indigo-500 shadow-lg rounded-xl hover:shadow-xl">
     <div className="flex items-center gap-3 mb-2">
       {icon}
-      <h4 className="font-bold text-xl text-gray-800">{title}</h4>
+      <h4 className="text-xl font-bold text-gray-800">{title}</h4>
     </div>
-    <p className="text-gray-600 text-sm">{description}</p>
+    <p className="text-sm text-gray-600">{description}</p>
   </div>
 );
 
@@ -121,24 +121,24 @@ const ProcessStep = ({ stepNumber, step }) => (
     <div className="bg-[#2E96FF] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">
       {stepNumber}
     </div>
-    <span className="text-gray-700 text-lg">{step}</span>
+    <span className="text-lg text-gray-700">{step}</span>
   </li>
 );
 
 const BenefitItem = ({ title, description }) => (
-  <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-md border-l-4 border-green-500">
-    <ArrowRight className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+  <div className="flex items-start gap-4 p-4 bg-white border-l-4 border-green-500 rounded-lg shadow-md">
+    <ArrowRight className="flex-shrink-0 w-5 h-5 mt-1 text-green-600" />
     <div>
-      <h4 className="font-semibold text-lg text-gray-800 mb-1">{title}</h4>
-      <p className="text-gray-600 text-sm">{description}</p>
+      <h4 className="mb-1 text-lg font-semibold text-gray-800">{title}</h4>
+      <p className="text-sm text-gray-600">{description}</p>
     </div>
   </div>
 );
 
 
 const ResourceLinkGroup = ({ title, items, icon: Icon }) => (
-  <div className="p-4 bg-white rounded-xl shadow-lg">
-    <h4 className="font-bold text-xl mb-3 text-gray-900 flex items-center gap-2">
+  <div className="p-4 bg-white shadow-lg rounded-xl">
+    <h4 className="flex items-center gap-2 mb-3 text-xl font-bold text-gray-900">
       {Icon && <Icon className="w-5 h-5 text-[#2E96FF]" />} {title}
     </h4>
     <div className="grid grid-cols-2 gap-x-4 gap-y-2">
@@ -160,22 +160,22 @@ const ResourceLinkGroup = ({ title, items, icon: Icon }) => (
 
 const ExpertiseContent = () => (
   <section id="expertise-content" className="py-10 scroll-mt-24">
-    <h3 className="text-2xl font-bold mb-6 text-gray-800">Online Lawyer Consultation</h3>
-    <p className="text-lg text-gray-700 mb-8 max-w-4xl">Getting reliable legal help is now easier and more accessible with online consultation services. Whether you’re dealing with property disputes, corporate law, family law, or criminal matters, our platform enables you to connect with experienced lawyers via video or phone calls. With Vakilsearch, you can choose from legal experts specializing in various fields, including cybercrime, intellectual property, domestic violence, and more, to receive personalized, professional advice tailored to your specific needs—all from the comfort of your home.</p>
+    <h3 className="mb-6 text-2xl font-bold text-gray-800">Online Lawyer Consultation</h3>
+    <p className="max-w-4xl mb-8 text-lg text-gray-700">Getting reliable legal help is now easier and more accessible with online consultation services. Whether you’re dealing with property disputes, corporate law, family law, or criminal matters, our platform enables you to connect with experienced lawyers via video or phone calls. With Vakilsearch, you can choose from legal experts specializing in various fields, including cybercrime, intellectual property, domestic violence, and more, to receive personalized, professional advice tailored to your specific needs—all from the comfort of your home.</p>
 
-    <h4 className="text-xl font-bold mb-4 text-gray-800">Core Services for Legal Notices:</h4>
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div className="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500 shadow-sm">
-        <h4 className="font-semibold text-lg mb-1 text-indigo-700">Clear and concise drafting</h4>
-        <p className="text-gray-600 text-sm">Our lawyers assist in drafting and sending legal notices to resolve disputes, breach of contract issues, or other legal concerns.</p>
+    <h4 className="mb-4 text-xl font-bold text-gray-800">Core Services for Legal Notices:</h4>
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="p-6 border-l-4 border-indigo-500 shadow-sm bg-indigo-50 rounded-xl">
+        <h4 className="mb-1 text-lg font-semibold text-indigo-700">Clear and concise drafting</h4>
+        <p className="text-sm text-gray-600">Our lawyers assist in drafting and sending legal notices to resolve disputes, breach of contract issues, or other legal concerns.</p>
       </div>
-      <div className="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500 shadow-sm">
-        <h4 className="font-semibold text-lg mb-1 text-indigo-700">Tailor made notices & Quick filing</h4>
-        <p className="text-gray-600 text-sm">Each notice is customized to your specific needs, guaranteeing quick filing and timely response.</p>
+      <div className="p-6 border-l-4 border-indigo-500 shadow-sm bg-indigo-50 rounded-xl">
+        <h4 className="mb-1 text-lg font-semibold text-indigo-700">Tailor made notices & Quick filing</h4>
+        <p className="text-sm text-gray-600">Each notice is customized to your specific needs, guaranteeing quick filing and timely response.</p>
       </div>
-      <div className="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500 shadow-sm">
-        <h4 className="font-semibold text-lg mb-1 text-indigo-700">Top lawyer support</h4>
-        <p className="text-gray-600 text-sm">Receive strategic guidance from top-tier legal experts throughout the process.</p>
+      <div className="p-6 border-l-4 border-indigo-500 shadow-sm bg-indigo-50 rounded-xl">
+        <h4 className="mb-1 text-lg font-semibold text-indigo-700">Top lawyer support</h4>
+        <p className="text-sm text-gray-600">Receive strategic guidance from top-tier legal experts throughout the process.</p>
       </div>
     </div>
   </section>
@@ -183,8 +183,8 @@ const ExpertiseContent = () => (
 
 const ServicesContent = () => (
   <section id="services-content" className="py-10 scroll-mt-24">
-    <h3 className="text-2xl font-bold mb-6 text-gray-800">What Are Lawyer Services?</h3>
-    <p className="text-lg text-gray-700 mb-8 max-w-4xl">Our Online lawyer consultation services offer a range of legal consultation services that cater to different needs, from business contracts to family matters.</p>
+    <h3 className="mb-6 text-2xl font-bold text-gray-800">What Are Lawyer Services?</h3>
+    <p className="max-w-4xl mb-8 text-lg text-gray-700">Our Online lawyer consultation services offer a range of legal consultation services that cater to different needs, from business contracts to family matters.</p>
 
     <div className="space-y-6">
       <ServiceItem icon={<Briefcase className="w-6 h-6 text-indigo-600" />} title="Legal Consultation" description="Get expert legal advice tailored to your situation. Our lawyers analyze your case and guide you toward the best course of action" />
@@ -198,8 +198,8 @@ const ServicesContent = () => (
 
 const ProcessContent = () => (
   <section id="process-content" className="py-10 scroll-mt-24">
-    <h3 className="text-2xl font-bold mb-6 text-gray-800">How Online Attorney Consultations Work</h3>
-    <p className="text-lg text-gray-700 mb-8 max-w-4xl">Vakilsearch makes it easy to connect with expert lawyers online through a quick and secure process. Follow these easy steps to book your slot:</p>
+    <h3 className="mb-6 text-2xl font-bold text-gray-800">How Online Attorney Consultations Work</h3>
+    <p className="max-w-4xl mb-8 text-lg text-gray-700">Vakilsearch makes it easy to connect with expert lawyers online through a quick and secure process. Follow these easy steps to book your slot:</p>
 
     <ol className="space-y-5 list-none">
       <ProcessStep stepNumber={1} step="Visit our website for legal support at https://vakilsearch.com/talk-to-a-lawyer" />
@@ -211,16 +211,16 @@ const ProcessContent = () => (
       <ProcessStep stepNumber={7} step="Pick your preferred slot and make the payment." />
       <ProcessStep stepNumber={8} step="Our lawyers will contact you through your chosen mode of communication, either video or audio call, at your selected time." />
     </ol>
-    <p className="mt-8 text-indigo-600 font-bold text-lg">With Vakilsearch, instant advocate support is just a few clicks away. Book your slot now!</p>
+    <p className="mt-8 text-lg font-bold text-indigo-600">With Vakilsearch, instant advocate support is just a few clicks away. Book your slot now!</p>
   </section>
 );
 
 const BenefitsContent = () => (
   <section id="benefits-content" className="py-10 scroll-mt-24">
-    <h3 className="text-2xl font-bold mb-6 text-gray-800">Benefits of Online Attorney Consultation</h3>
-    <p className="text-lg text-gray-700 mb-8 max-w-4xl">Online attorney consultation offers you clarity, confidence, and expert support from the comfort of your house. Here are the key benefits of consulting a lawyer from Vakilsearch:</p>
+    <h3 className="mb-6 text-2xl font-bold text-gray-800">Benefits of Online Attorney Consultation</h3>
+    <p className="max-w-4xl mb-8 text-lg text-gray-700">Online attorney consultation offers you clarity, confidence, and expert support from the comfort of your house. Here are the key benefits of consulting a lawyer from Vakilsearch:</p>
 
-    <div className="grid md:grid-cols-2 gap-6">
+    <div className="grid gap-6 md:grid-cols-2">
       <BenefitItem title="Trusted Legal Advice" description="Vakilsearch has a team of verified lawyers who break down complex laws, evaluate your case, and help you choose the best course of action." />
       <BenefitItem title="Advocacy and Representation" description="Our lawyers provide the best legal services online protecting your rights, drafting legal documents, and supporting you through legal procedures when needed." />
       <BenefitItem title="Risk Reduction and Cost Savings" description="Avoid costly legal mistakes with the help of our legal experts. Timely advice minimises risks and can save you both time and money." />
@@ -233,18 +233,18 @@ const BenefitsContent = () => (
 
 
 const FAQsContent = ({ faqs, faqOpen, setFaqOpen }) => (
-  <section id="faqs-content" className="py-10 max-w-4xl mx-auto scroll-mt-24">
-    <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Frequently Asked Questions on Online Lawyer Consultation</h3>
+  <section id="faqs-content" className="max-w-4xl py-10 mx-auto scroll-mt-24">
+    <h3 className="mb-6 text-2xl font-bold text-center text-gray-800">Frequently Asked Questions on Online Lawyer Consultation</h3>
 
     <div className="space-y-4">
       {faqs.map((f, i) => (
-        <div key={i} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        <div key={i} className="overflow-hidden border border-gray-200 shadow-sm rounded-xl">
           <button
             // FIX: Added backticks for template literal className
             className={`w-full flex justify-between items-center p-5 text-left transition ${faqOpen === i ? 'bg-indigo-50 text-indigo-700' : 'bg-white hover:bg-gray-50'}`}
             onClick={() => setFaqOpen(faqOpen === i ? null : i)}
           >
-            <span className="font-semibold text-lg">{f.q}</span>
+            <span className="text-lg font-semibold">{f.q}</span>
             <ChevronDown
               // FIX: Added backticks for template literal className
               className={`w-6 h-6 transition-transform ${faqOpen === i ? "rotate-180 text-indigo-600" : ""}`}
@@ -329,7 +329,7 @@ export default function Dashboard() {
     <div className="bg-white min-h-screen font-[Poppins]">
       {/* === HERO SECTION REVISED for the second image's specific split === */}
       <section className="relative w-full overflow-hidden min-h-[650px] bg-[#E6F0F6]">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 relative pt-12">
+        <div className="relative px-4 pt-12 mx-auto max-w-7xl md:px-8">
 
           {/* Background Styling: 
             This div is now dedicated to holding the uploaded image, 
@@ -345,7 +345,7 @@ export default function Dashboard() {
             <img
               src={BackgroundImageSrc}
               alt="Diagonal background graphic"
-              className="absolute top-0 left-0 w-full h-full object-cover"
+              className="absolute top-0 left-0 object-cover w-full h-full"
               style={{
                 // The image itself (Backgroundimage.png) is assumed to contain the dark diagonal shape.
                 // object-cover ensures it scales nicely without stretching too much.
@@ -354,10 +354,10 @@ export default function Dashboard() {
           </div>
 
           {/* Content and Form Wrapper - Set z-index higher than background */}
-          <div className="relative flex flex-col lg:flex-row items-start pt-10 pb-12 lg:pb-0 z-20">
+          <div className="relative z-20 flex flex-col items-start pt-10 pb-12 lg:flex-row lg:pb-0">
 
             {/* Left Column (Content) - Remains dark text on dark background defined by the image */}
-            <div className="w-full lg:w-3/5 text-white p-4 md:p-6 pb-20 relative z-20">
+            <div className="relative z-20 w-full p-4 pb-20 text-white lg:w-3/5 md:p-6">
 
               {/* Badge */}
               <div
@@ -367,7 +367,7 @@ export default function Dashboard() {
                 #1 Legal Service Provider In India
               </div>
               {/* H1 Title */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+              <h1 className="mb-4 text-4xl font-extrabold leading-tight md:text-5xl lg:text-6xl">
                 Online Lawyer Consultation
               </h1>
 
@@ -377,9 +377,9 @@ export default function Dashboard() {
               </p>
 
               {/* Bullet Points */}
-              <div className="space-y-1 mb-8 text-lg">
-                <p className="flex items-center gap-2 text-[#A0A0A0] text-sm"><span className="w-2 h-2 bg-green-500 block"></span> Lorem Ipsum is Simply Dummy Text Of The Printing And Typesetting I</p>
-                <p className="flex items-center gap-2 text-[#A0A0A0] text-sm"><span className="w-2 h-2 bg-indigo-500 block"></span> Lorem Ipsum is Simply Dummy Text Of The Printing And Typesetting I</p>
+              <div className="mb-8 space-y-1 text-lg">
+                <p className="flex items-center gap-2 text-[#A0A0A0] text-sm"><span className="block w-2 h-2 bg-green-500"></span> Lorem Ipsum is Simply Dummy Text Of The Printing And Typesetting I</p>
+                <p className="flex items-center gap-2 text-[#A0A0A0] text-sm"><span className="block w-2 h-2 bg-indigo-500"></span> Lorem Ipsum is Simply Dummy Text Of The Printing And Typesetting I</p>
               </div>
 
               {/* Live Stats */}
@@ -393,10 +393,10 @@ export default function Dashboard() {
             {/* Right Column (Form) */}
             <div className="w-full lg:w-[350px] relative z-30 lg:mt-0 lg:ml-auto mt-[-100px] sm:mt-[-50px]">
               <div
-                className="w-full p-6 md:p-8 rounded-2xl shadow-xl bg-white"
+                className="w-full p-6 bg-white shadow-xl md:p-8 rounded-2xl"
                 style={{ borderRadius: '24px', border: '1px solid #E0E0E0' }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-gray-800">Get Expert Legal Consultation</h2>
+                <h2 className="mb-6 text-xl font-semibold text-gray-800">Get Expert Legal Consultation</h2>
                 <form className="space-y-4">
                   <input className="w-full px-4 py-3 bg-[#F4F4F4] border border-[#E0E0E0] rounded-lg text-sm text-gray-500 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Email" />
                   <input className="w-full px-4 py-3 bg-[#F4F4F4] border border-[#E0E0E0] rounded-lg text-sm text-gray-500 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Mobile Number" />
@@ -406,10 +406,10 @@ export default function Dashboard() {
 
                   {/* WhatsApp Update Text and Toggle */}
                   <div className="flex items-center justify-between pt-1 text-gray-600">
-                    <p className="text-xs md:text-sm text-gray-700 font-medium">Get Easy Updates Through Whatsapp</p>
+                    <p className="text-xs font-medium text-gray-700 md:text-sm">Get Easy Updates Through Whatsapp</p>
                     {/* Toggle Switch */}
                     <div className="w-10 h-5 bg-gray-300 rounded-full relative cursor-pointer flex items-center p-0.5 transition-colors">
-                      <div className="w-4 h-4 bg-white rounded-full shadow-md transition-transform transform translate-x-0"></div>
+                      <div className="w-4 h-4 transition-transform transform translate-x-0 bg-white rounded-full shadow-md"></div>
                     </div>
                   </div>
 
@@ -425,9 +425,9 @@ export default function Dashboard() {
       </section>
 
       {/* === Main Content Tabs Navigation (Sticky) === */}
-      <section className="py-8 md:py-10 px-4 md:px-8 bg-gray-50 border-b border-gray-200 sticky top-0 z-30 shadow-md">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center bg-white rounded-xl w-full text-sm md:text-base overflow-x-auto border border-gray-200">
+      <section className="sticky top-0 z-30 px-4 py-8 border-b border-gray-200 shadow-md md:py-10 md:px-8 bg-gray-50">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex items-center w-full overflow-x-auto text-sm bg-white border border-gray-200 rounded-xl md:text-base">
             {tabs.map((tab) => (
               <a
                 key={tab.id}
@@ -446,8 +446,8 @@ export default function Dashboard() {
       </section>
 
       {/* === All Tab Content Sections Rendered Sequentially === */}
-      <div className="py-2 md:py-4 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="px-4 py-2 md:py-4 md:px-8">
+        <div className="mx-auto max-w-7xl">
           <ExpertiseContent />
           <ServicesContent />
           <ProcessContent />
@@ -458,16 +458,16 @@ export default function Dashboard() {
 
 
       {/* --- Full Expertise List --- */}
-      <section className="py-12 md:py-16 bg-gray-50 px-4 md:px-8 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-10">
+      <section className="px-4 py-12 border-t border-gray-200 md:py-16 bg-gray-50 md:px-8">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="mb-10 text-3xl font-bold text-center text-gray-900 md:text-4xl">
             Our Lawyers Areas of Expertise
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-6xl mx-auto">
+          <div className="grid max-w-6xl gap-4 mx-auto sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
             {expertiseList.map((item, i) => (
-              <div key={i} className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 flex items-center gap-3 hover:shadow-md transition">
+              <div key={i} className="flex items-center gap-3 p-4 transition bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md">
                 <Briefcase className="w-5 h-5 text-[#2E96FF]" />
-                <span className="font-medium text-gray-700 text-sm">{item}</span>
+                <span className="text-sm font-medium text-gray-700">{item}</span>
               </div>
             ))}
           </div>

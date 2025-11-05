@@ -12,8 +12,8 @@ module.exports = {
         cyan: 'hsl(var(--brand-2) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
-        libre: ['"Libre Bodoni"', 'serif'], // ✅ Added Libre Bodoni font
+        sans: ['"Source Sans 3"', 'sans-serif'],
+        libre: ['"Libre Bodoni"', 'serif'], 
       },
     },
   },
